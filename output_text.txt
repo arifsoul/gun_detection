@@ -1,0 +1,72 @@
+Assessment: Computer Vision v1.0.2
+Computer Vision Assessment Task: Black Gun
+Detection v1.0.2
+Objective
+To evaluate the candidate's ability to prepare, train, and evaluate a computer vision model
+for detecting a Black Gun (KAC PDW) using both
+Synthetic Data (SD) : “synthetic_dataset_KAC_PDW_Blackgun_v2”
+Real Data : “real_dataset_KAC_PDW_Blackgun”
+within the TRMS system, and to compare their performance.
+Duration: 1 week
+Assessment Deliverables
+1. Data Preparation
+a. Organize datasets for:
+■ VSD (Synthetic Data): Pre-generated or provided.
+■ Real Data: Captured from actual camera/test footage.
+b. Annotate or validate existing annotations (bounding boxes or segmentation).
+c. Create a clear structure for training and testing.
+2. Model Training
+a. Train a computer vision model (e.g. YOLO) using
+■ Synthetic Data only
+■ Real World Data Only
+■ Combine Synthetic Data with Real World Data
+3. Test Video Inference
+a. Run inference on test videos captured in real environments.
+b. Save inference outputs (frames or videos with detected bounding boxes).
+4. Reporting
+a. Include the following in your report:
+■ Detection Accuracy
+■ Qualitative Examples (screenshots from test videos)
+■ Failure Cases
+■ Comparison of SD-only model vs Real-data-trained model
+■ Performance differences on Real Test Video
+■ Lighting conditions (Day / Night mode)
+b. Optionally, suggest how to better structure or capture future test video data to
+improve performance
+© Blue Silo Pte. Ltd. All Rights Reserved.
+Assessment: Computer Vision v1.0.2
+c. Provide detailed analysis on the real vs synthetic datasets and highlight or
+comment on the accuracy, precision and important statistics that might
+convince people to use or not to use synthetic datasets instead of real data
+sets.
+d. Our business is in Visual Synthetic Data, we would like to know this quality of
+the data sets and if they can be used for real world or not. If yes or no, why?
+5. BONUS: Implement simple object tracking so the gun is assigned an ID (e.g.,
+"Weapon ID 01") across frames.
+6. Additional: To show robustness of solutions, candidates are to ensure the model is
+robust enough to do a detection on a video release 2h before the actual review
+interview, and to produce results and table reporting as the other test videos. This will
+be released on the day of the review interview itself.
+7. Ensure total data isolation by excluding your test videos from the training and
+validation sets. These videos must serve as an independent Ground Truth
+benchmark. You are required to manually annotate these test frames to calculate a
+Confusion Matrix (identifying True Positives, True Negatives, False Positives, and
+False Negatives). Use these counts to derive standard performance metrics,
+including Accuracy, Precision, and Recall, to evaluate the model's real-world
+reliability.
+Tools & Constraints
+● Annotation Format & Submission Format: YOLO format
+● Submission Format:
+○ Python scripts or notebooks
+○ Inference result videos/images
+○ Report (PDF or Markdown)
+○ Submission must be pushed to a public or private Git repository (e.g., GitHub,
+GitLab, Bitbucket), include read.me of how to run the code.
+● You are allowed to do your own additional annotations and labellings on the datasets
+for more accuracy and precision.
+Bonus
+A new set of cleaner VSD_v3, is available as “synthetic_dataset_KAC_PDW_Blackgun_v3”
+Do a comparison with
+● Real World Footage
+● VSD v2: real_dataset_KAC_PDW_Blackgun_v2
+© Blue Silo Pte. Ltd. All Rights Reserved.
