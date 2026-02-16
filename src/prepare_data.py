@@ -244,6 +244,24 @@ def main():
     all_val = real_val + syn_v2_val + syn_v3_val
     all_test = real_test + syn_v2_test + syn_v3_test
 
+    # --- Print Detailed Summary ---
+    print("\n" + "=" * 80)
+    print(
+        f"{'DATASET':<20} | {'TRAIN':<10} | {'VAL':<10} | {'TEST':<10} | {'TOTAL':<10}"
+    )
+    print("-" * 80)
+
+    def print_row(name, t, v, tt):
+        total = len(t) + len(v) + len(tt)
+        print(f"{name:<20} | {len(t):<10} | {len(v):<10} | {len(tt):<10} | {total:<10}")
+
+    print_row("Real Data", real_train, real_val, real_test)
+    print_row("Synthetic V2", syn_v2_train, syn_v2_val, syn_v2_test)
+    print_row("Synthetic V3", syn_v3_train, syn_v3_val, syn_v3_test)
+    print("-" * 80)
+    print_row("COMBINED TOTAL", all_train, all_val, all_test)
+    print("=" * 80 + "\n")
+
     copy_files(all_train, "train")
     copy_files(all_val, "val")
     copy_files(all_test, "test")

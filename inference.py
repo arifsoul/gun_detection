@@ -2,6 +2,7 @@ import streamlit as st
 import cv2
 import tempfile
 import os
+import time
 from ultralytics import YOLO
 from pathlib import Path
 
@@ -14,12 +15,16 @@ st.set_page_config(
 )
 
 # Paths
-PROJECT_ROOT = Path(__file__).parent.parent
-NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
-RUNS_DIR = NOTEBOOKS_DIR / "runs" / "detect"
+PROJECT_ROOT = Path(__file__).parent
+DATA_DIR = PROJECT_ROOT / "data"
+RUNS_DIR = PROJECT_ROOT / "runs" / "detect"
+INFERENCE_OUTPUT_DIR = PROJECT_ROOT / "runs" / "inference"
 TEST_VIDEOS_DIR = (
     PROJECT_ROOT / "BS Interview CV Test_ Weapon Object Detection" / "test videos"
 )
+
+# Ensure output dir exists
+INFERENCE_OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # CSS for styling
 st.markdown(
@@ -71,17 +76,29 @@ st.sidebar.header("Configuration")
 
 # 1. Model Selection
 model_options = {
-    "Combined (Syn + Real)": RUNS_DIR / "train_combined" / "weights" / "best.pt",
+    "Gun Detection Run (Combined)": RUNS_DIR
+    / "gun_detection_run"
+    / "weights"
+    / "best.pt",
     "Real Data Only": RUNS_DIR / "train_real" / "weights" / "best.pt",
     "Synthetic Data Only": RUNS_DIR / "train_syn" / "weights" / "best.pt",
-    "Pre-trained YOLOv8n (COCO)": "yolov8n.pt",  # Fallback
+    "Pre-trained YOLOv8n (COCO)": "yolov8n.pt",
+    "Custom Path": "Custom",
 }
 
 selected_model_name = st.sidebar.selectbox("Select Model", list(model_options.keys()))
-model_path = model_options[selected_model_name]
+if selected_model_name == "Custom":
+    model_path = st.sidebar.text_input("Enter model path (.pt)", "best.pt")
+else:
+    model_path = model_options[selected_model_name]
 
 # Check if model exists
-if isinstance(model_path, Path) and not model_path.exists():
+# Only warn if it's not the fallback
+if (
+    isinstance(model_path, Path)
+    and not model_path.exists()
+    and selected_model_name != "Pre-trained YOLOv8n (COCO)"
+):
     st.sidebar.warning(
         f"⚠️ Model weights not found at {model_path}.\nUsing default YOLOv8n implementation."
     )
@@ -116,6 +133,9 @@ elif input_source == "Select Test Video":
     else:
         st.sidebar.error("Test videos directory not found!")
 
+# 4. Save Output
+save_output = st.sidebar.checkbox("Save Output Video", value=False)
+output_name = st.sidebar.text_input("Output Filename", "output.mp4")
 
 # Main Inference Loop
 if video_path:
@@ -135,16 +155,27 @@ if video_path:
             model = YOLO(str(model_path))
             cap = cv2.VideoCapture(video_path)
 
+            # Setup Video Writer if saving
+            writer = None
+            if save_output:
+                width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                fps = int(cap.get(cv2.CAP_PROP_FPS))
+                output_path = INFERENCE_OUTPUT_DIR / output_name
+                writer = cv2.VideoWriter(
+                    str(output_path),
+                    cv2.VideoWriter_fourcc(*"mp4v"),
+                    fps,
+                    (width, height),
+                )
+                st.sidebar.info(f"Saving to {output_path}")
+
             while cap.isOpened():
                 ret, frame = cap.read()
                 if not ret:
                     break
 
                 # Inference
-                # Ensure class 0 is gun if using our custom models.
-                # If using COCO pretrained, we might detect everything.
-                # Our custom models strictly have class 0 = Black Gun.
-
                 results = model.predict(frame, conf=conf_threshold, verbose=False)
                 res = results[0]
 
@@ -162,7 +193,6 @@ if video_path:
                         '<div class="warning-box">⚠️ GUN DETECTED!</div>',
                         unsafe_allow_html=True,
                     )
-                    # Play alarm sound? (Streamlit doesn't support easy audio trigger without rerun, maybe just visual)
                 else:
                     st_status.markdown(
                         '<div class="safe-box">✅ SAFE</div>', unsafe_allow_html=True
@@ -184,10 +214,15 @@ if video_path:
                     annotated_frame, channels="BGR", use_container_width=True
                 )
 
-                # Sleep slightly to match simpler playback or just run as fast as possible
-                # time.sleep(0.01)
+                # Write to file
+                if writer:
+                    writer.write(annotated_frame)
 
             cap.release()
+            if writer:
+                writer.release()
+                st.success(f"Video saved to {INFERENCE_OUTPUT_DIR / output_name}")
+
             st.success("Finished processing video.")
 
         except Exception as e:
