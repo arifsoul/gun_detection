@@ -44,21 +44,53 @@ class MLflowYOLOCallback:
         try:
             if mlflow.active_run():
                 # Log Metrics
-                # trainer.metrics is a dict, keys might need cleaning
                 if hasattr(trainer, "metrics"):
-                    mlflow.log_metrics(trainer.metrics, step=trainer.epoch)
+                    # Sanitize metric names to match MLflow requirements (alphanumerics, _, -, ., /, space)
+                    sanitized_metrics = {
+                        k.replace("(", "_").replace(")", ""): v
+                        for k, v in trainer.metrics.items()
+                    }
+                    mlflow.log_metrics(sanitized_metrics, step=trainer.epoch)
 
-                # Log Loss values if available separately
+                # Log Loss values
                 if hasattr(trainer, "loss_items"):
-                    # Mapping depends on YOLO version, usually box, cls, dfl
                     losses = {
-                        f"loss/{k}": v
+                        f"loss/{k.replace('(', '_').replace(')', '')}": v
                         for k, v in zip(trainer.loss_names, trainer.loss_items)
                     }
                     mlflow.log_metrics(losses, step=trainer.epoch)
 
+                # Real-time Artifact Logging (Plots, Confusion Matrix, etc.)
+                if hasattr(trainer, "save_dir") and os.path.exists(trainer.save_dir):
+                    # List of important files to log in real-time
+                    # We log png/jpg files which include results.png, confusion_matrix.png, etc.
+                    for file in os.listdir(trainer.save_dir):
+                        if file.endswith(".png") or file.endswith(".jpg"):
+                            file_path = os.path.join(trainer.save_dir, file)
+                            # Log artifact to root or specific folder
+                            # We overwrite existing artifacts in MLflow with the latest version
+                            mlflow.log_artifact(
+                                file_path, artifact_path="training_plots"
+                            )
+
+                # Real-time Model Checkpointing (Best & Last Weights)
+                # Log best.pt and last.pt at the end of every epoch so they are always up to date
+                if (
+                    hasattr(trainer, "best")
+                    and trainer.best
+                    and os.path.exists(trainer.best)
+                ):
+                    mlflow.log_artifact(str(trainer.best), artifact_path="weights")
+
+                if (
+                    hasattr(trainer, "last")
+                    and trainer.last
+                    and os.path.exists(trainer.last)
+                ):
+                    mlflow.log_artifact(str(trainer.last), artifact_path="weights")
+
         except Exception as e:
-            LOGGER.warning(f"MLflowCallback: Error logging metrics: {e}")
+            LOGGER.warning(f"MLflowCallback: Error logging metrics/artifacts: {e}")
 
     def on_train_end(self, trainer):
         """Called at the end of training."""

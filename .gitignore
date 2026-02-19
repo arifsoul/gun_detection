@@ -36,5 +36,3 @@ list_dir_output.txt
 *.docx
 data/
 BS Interview CV Test_ Weapon Object Detection
-mlruns
-runs
