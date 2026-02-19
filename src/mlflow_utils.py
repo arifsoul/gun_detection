@@ -114,14 +114,21 @@ class MLflowYOLOCallback:
 
                             file_path = os.path.join(root, file)
                             # Calculate relative path for artifact structure
-                            rel_path = os.path.relpath(file_path, trainer.save_dir)
+                            rel_path = os.path.relpath(
+                                file_path, trainer.save_dir
+                            ).replace("\\", "/")
                             # Log artifact preserving structure if needed, or just flat
                             # Putting them in 'training_results' folder in MLflow to keep it clean
+                            # Force forward slashes for artifact_path (MLflow requirement/User pref)
+                            artifact_dir = os.path.dirname(rel_path)
+                            if artifact_dir == "." or artifact_dir == "":
+                                art_path = "training_results"
+                            else:
+                                art_path = f"training_results/{artifact_dir}"
+
                             mlflow.log_artifact(
                                 file_path,
-                                artifact_path=os.path.join(
-                                    "training_results", os.path.dirname(rel_path)
-                                ),
+                                artifact_path=art_path,
                             )
 
                 # End Run?
