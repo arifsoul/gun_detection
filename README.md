@@ -66,14 +66,20 @@ To evaluate:
 
 ### 6. Inference
 
-Explain how to run inference on test videos:
+The inference system is built with **Streamlit** for an interactive and easy-to-use experience.
+
+To launch the inference UI:
 
 ```bash
-# Run inference on a video file
-python inference.py --source path/to/video.mp4 --weights path/to/best.pt --conf 0.5
+streamlit run inference.py
 ```
 
-- **Output**: Results are saved in `runs/detect/` (or specify location).
+This will open a web interface where you can:
+
+- **Select a Model**: Choose from pre-trained models (Real, Synthetic, Combined) or upload a custom `.pt` file.
+- **Adjust Confidence**: Set the confidence threshold (0.0 - 1.0).
+- **Choose Input Source**: Upload a video file or select from available test videos.
+- **Save Output**: Optionally save the annotated video to `runs/inference/`.
 
 ---
 
@@ -171,25 +177,25 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 *How well does the model learn its training domain?*
 
-| Model Train Source      | Test Set                | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       |
-| :---------------------- | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- |
-| **Real + Syn V3** | **Real + Syn V3** | **0.993** | **0.991** | **0.995** | **0.953** |
-| Real + Syn V2           | Real + Syn V2           | 0.997           | 1.000           | 0.995           | 0.944           |
-| Real                    | Real                    | 0.987           | 1.000           | 0.995           | 0.955           |
-| Syn V3                  | Syn V3                  | 0.989           | 1.000           | 0.995           | 0.994           |
-| Syn V2                  | Syn V2                  | 1.000           | 0.999           | 0.995           | 0.876           |
+| Model Train Source      | Test Set                | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix | Conclusion |
+| :---------------------- | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | ---------------- | :--- |
+| **Real + Syn V3** | **Real + Syn V3** | **0.993** | **0.991** | **0.995** | **0.953** | ![CM](docs/confusion_matrix_real_syn_v3_self.png) | **Good Convergence.** High precision and recall indicate the model effectively learned the mixed distribution. |
+| Real + Syn V2           | Real + Syn V2           | 0.997           | 1.000           | 0.995           | 0.944           | ![CM](docs/confusion_matrix_real_syn_v2_self.png) | **Stable Baseline.** Slightly lower mAP@50-95 suggests less precise bounding boxes than V3. |
+| Real                    | Real                    | 0.987           | 1.000           | 0.995           | 0.955           | ![CM](docs/confusion_matrix_real_self.png) | **Strong Real Performance.** Perfect recall on its own test set shows it learned the real data well. |
+| Syn V3                  | Syn V3                  | 0.989           | 1.000           | 0.995           | 0.994           | ![CM](docs/confusion_matrix_syn_v3_self.png) | **Perfect Synthetic Fit.** Near perfect scores confirm the model mastered the clean synthetic domain. |
+| Syn V2                  | Syn V2                  | 1.000           | 0.999           | 0.995           | 0.876           | ![CM](docs/confusion_matrix_syn_v2_self.png) | **Overfitting to Noise?** High classification scores but lower box precision (0.876) vs V3. |
 
 #### 3.2 Universal Performance (Generalization)
 
 *How well does the model perform on the complete dataset (Real + All Synthetic)? This is the true test of robustness.*
 
-| Model Train Source      | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix |
-| :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | :--------------- |
-| **Real + Syn V3** | **0.981** | **0.940** | **0.967** | **0.897** | [Link to Image]  |
-| Real + Syn V2           | 0.994           | 0.976           | 0.994           | 0.793           | [Link to Image]  |
-| Real                    | 0.954           | 0.877           | 0.941           | 0.633           | [Link to Image]  |
-| Syn V3                  | 0.909           | 0.426           | 0.573           | 0.506           | [Link to Image]  |
-| Syn V2                  | 0.789           | 0.500           | 0.580           | 0.265           | [Link to Image]  |
+| Model Train Source      | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix | Conclusion |
+| :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | :--------------- | :--- |
+| **Real + Syn V3** | **0.981** | **0.940** | **0.967** | **0.897** | ![CM](docs/confusion_matrix_real_syn_v3_universal.png) | **Best Generalization.** Maintains high Recall (0.940) on universal set, minimizing False Negatives. |
+| Real + Syn V2           | 0.994           | 0.976           | 0.994           | 0.793           | ![CM](docs/confusion_matrix_real_syn_v2_universal.png) | **Less Precise Boxes.** High classification scores but significantly lower mAP@50-95 (0.793) than V3. |
+| Real                    | 0.954           | 0.877           | 0.941           | 0.633           | ![CM](docs/confusion_matrix_real_universal.png) | **Data Limitation.** Real data alone struggles to cover variances, leading to lower Recall and mAP. |
+| Syn V3                  | 0.909           | 0.426           | 0.573           | 0.506           | ![CM](docs/confusion_matrix_syn_v3_universal.png) | **Domain Gap Failure.** Misses >50% of real-world guns (Recall 0.426), proving Syn-only is insufficient. |
+| Syn V2                  | 0.789           | 0.500           | 0.580           | 0.265           | ![CM](docs/confusion_matrix_syn_v2_universal.png) | **Poor Transfer.** Low Precision and Recall confirm noisy synthetic data fails to assist real-world detection. |
 
 #### 3.3 Key Observations
 
