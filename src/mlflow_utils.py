@@ -8,10 +8,17 @@ class MLflowYOLOCallback:
     Custom Callback for integrating MLflow with YOLO training.
     """
 
-    def __init__(self, run_name=None, tracking_uri=None, experiment_name=None):
+    def __init__(
+        self,
+        run_name=None,
+        tracking_uri=None,
+        experiment_name=None,
+        run_id=None,
+    ):
         self.run_name = run_name
         self.tracking_uri = tracking_uri
         self.experiment_name = experiment_name
+        self.run_id = run_id
 
     def on_pretrain_routine_start(self, trainer):
         """Called before training routine starts."""
@@ -23,7 +30,10 @@ class MLflowYOLOCallback:
                 mlflow.set_experiment(self.experiment_name)
 
             if not mlflow.active_run():
-                mlflow.start_run(run_name=self.run_name)
+                if self.run_id:
+                    mlflow.start_run(run_id=self.run_id)
+                else:
+                    mlflow.start_run(run_name=self.run_name)
 
             # Log Parameters
             if hasattr(trainer, "args"):

@@ -407,6 +407,18 @@ def main():
     add_stats("Real Data", real_train, real_val, real_test)
     add_stats("Synthetic V2", syn_v2_train, syn_v2_val, syn_v2_test)
     add_stats("Synthetic V3", syn_v3_train, syn_v3_val, syn_v3_test)
+    add_stats(
+        "Real + Syn V2",
+        real_train + syn_v2_train,
+        real_val + syn_v2_val,
+        real_test + syn_v2_test,
+    )
+    add_stats(
+        "Real + Syn V3",
+        real_train + syn_v3_train,
+        real_val + syn_v3_val,
+        real_test + syn_v3_test,
+    )
     add_stats("Combined", all_train, all_val, all_test)
 
     # Generate Visualization (After split and summary)
