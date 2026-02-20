@@ -92,19 +92,19 @@ The application window (`1400 × 900`) will open with a **scrollable sidebar** o
 
 #### 6.2 Sidebar Controls
 
-| Section | Control | Description |
-|---|---|---|
-| **Model** | Listbox (multi-select) | Auto-discovers all trained models from `mlruns/`. Hold `Ctrl` to select multiple models for batch inference. |
-| **Input Video** | Text entry + Browse | Type or browse to any `.mp4 / .avi / .mov` video file. |
-| **Confidence Threshold** | Slider (0.0 – 1.0) | Minimum confidence score to display a detection box. Default: **0.40**. |
-| **Environment Simulation** | **Brightness** slider (0.1 – 2.0) | Simulates different lighting. `< 1.0` = darker, `> 1.0` = brighter. |
-| | **Live Preview** checkbox | Plays the video with current brightness applied **without running inference**. Useful for previewing simulation settings. |
-| **Output** | **Save Output Video** checkbox | When checked, saves the annotated result to `runs/inference/`. |
-| | **Format** radio (MP4 / GIF) | Choose output container. MP4 uses `cv2.VideoWriter`; GIF uses PIL (frames buffered in memory). |
-| **Results** | Listbox | Lists all saved MP4 and GIF files sorted by date (newest first). |
-| | **Play Selected** button | Opens and plays the selected result file in the preview area. |
-| **Buttons** | **START INFERENCE** | Begins inference on the selected video with all selected models sequentially. |
-| | **STOP** | Immediately stops inference, preview, or playback. |
+| Section                          | Control                                  | Description                                                                                                                    |
+| -------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Model**                  | Listbox (multi-select)                   | Auto-discovers all trained models from `mlruns/`. Hold `Ctrl` to select multiple models for batch inference.               |
+| **Input Video**            | Text entry + Browse                      | Type or browse to any `.mp4 / .avi / .mov` video file.                                                                       |
+| **Confidence Threshold**   | Slider (0.0 – 1.0)                      | Minimum confidence score to display a detection box. Default:**0.40**.                                                   |
+| **Environment Simulation** | **Brightness** slider (0.1 – 2.0) | Simulates different lighting.`< 1.0` = darker, `> 1.0` = brighter.                                                         |
+|                                  | **Live Preview** checkbox          | Plays the video with current brightness applied**without running inference**. Useful for previewing simulation settings. |
+| **Output**                 | **Save Output Video** checkbox     | When checked, saves the annotated result to `runs/inference/`.                                                               |
+|                                  | **Format** radio (MP4 / GIF)       | Choose output container. MP4 uses `cv2.VideoWriter`; GIF uses PIL (frames buffered in memory).                               |
+| **Results**                | Listbox                                  | Lists all saved MP4 and GIF files sorted by date (newest first).                                                               |
+|                                  | **Play Selected** button           | Opens and plays the selected result file in the preview area.                                                                  |
+| **Buttons**                | **START INFERENCE**                | Begins inference on the selected video with all selected models sequentially.                                                  |
+|                                  | **STOP**                           | Immediately stops inference, preview, or playback.                                                                             |
 
 ---
 
@@ -149,16 +149,16 @@ Output folder: `runs/inference/`
 
 #### 6.6 Status Bar & Metrics
 
-| Indicator | Meaning |
-|---|---|
-| 🟢 `✅ SAFE` (green bar) | No gun detected in current frame |
-| 🔴 `⚠️ GUN DETECTED!` (red bar) | Gun bounding box found in frame |
-| `🔍 Preview Mode` | Live preview is active |
-| `Saving GIF: ...` | GIF is being written to disk after loop ends |
-| `Stopped` | Inference / playback halted |
-| **Condition** metric | `Day` / `Night` based on average frame brightness vs threshold |
-| **Device** metric | `GPU` (CUDA) or `CPU` |
-| **Detections** metric | Number of bounding boxes in current frame |
+| Indicator                          | Meaning                                                            |
+| ---------------------------------- | ------------------------------------------------------------------ |
+| 🟢`✅ SAFE` (green bar)          | No gun detected in current frame                                   |
+| 🔴`⚠️ GUN DETECTED!` (red bar) | Gun bounding box found in frame                                    |
+| `🔍 Preview Mode`                | Live preview is active                                             |
+| `Saving GIF: ...`                | GIF is being written to disk after loop ends                       |
+| `Stopped`                        | Inference / playback halted                                        |
+| **Condition** metric         | `Day` / `Night` based on average frame brightness vs threshold |
+| **Device** metric            | `GPU` (CUDA) or `CPU`                                          |
+| **Detections** metric        | Number of bounding boxes in current frame                          |
 
 ---
 
@@ -276,25 +276,25 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 *How well does the model learn its training domain?*
 
-| Model Train Source      | Test Set                | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix | Conclusion |
-| :---------------------- | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | ---------------- | :--- |
+| Model Train Source      | Test Set                | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix                                | Conclusion                                                                                                           |
+| :---------------------- | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | ----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
 | **Real + Syn V3** | **Real + Syn V3** | **0.993** | **0.991** | **0.995** | **0.953** | ![CM](docs/confusion_matrix_real_syn_v3_self.png) | **Good Convergence.** High precision and recall indicate the model effectively learned the mixed distribution. |
-| Real + Syn V2           | Real + Syn V2           | 0.997           | 1.000           | 0.995           | 0.944           | ![CM](docs/confusion_matrix_real_syn_v2_self.png) | **Stable Baseline.** Slightly lower mAP@50-95 suggests less precise bounding boxes than V3. |
-| Real                    | Real                    | 0.987           | 1.000           | 0.995           | 0.955           | ![CM](docs/confusion_matrix_real_self.png) | **Strong Real Performance.** Perfect recall on its own test set shows it learned the real data well. |
-| Syn V3                  | Syn V3                  | 0.989           | 1.000           | 0.995           | 0.994           | ![CM](docs/confusion_matrix_syn_v3_self.png) | **Perfect Synthetic Fit.** Near perfect scores confirm the model mastered the clean synthetic domain. |
-| Syn V2                  | Syn V2                  | 1.000           | 0.999           | 0.995           | 0.876           | ![CM](docs/confusion_matrix_syn_v2_self.png) | **Overfitting to Noise?** High classification scores but lower box precision (0.876) vs V3. |
+| Real + Syn V2           | Real + Syn V2           | 0.997           | 1.000           | 0.995           | 0.944           | ![CM](docs/confusion_matrix_real_syn_v2_self.png) | **Stable Baseline.** Slightly lower mAP@50-95 suggests less precise bounding boxes than V3.                    |
+| Real                    | Real                    | 0.987           | 1.000           | 0.995           | 0.955           | ![CM](docs/confusion_matrix_real_self.png)        | **Strong Real Performance.** Perfect recall on its own test set shows it learned the real data well.           |
+| Syn V3                  | Syn V3                  | 0.989           | 1.000           | 0.995           | 0.994           | ![CM](docs/confusion_matrix_syn_v3_self.png)      | **Perfect Synthetic Fit.** Near perfect scores confirm the model mastered the clean synthetic domain.          |
+| Syn V2                  | Syn V2                  | 1.000           | 0.999           | 0.995           | 0.876           | ![CM](docs/confusion_matrix_syn_v2_self.png)      | **Overfitting to Noise?** High classification scores but lower box precision (0.876) vs V3.                    |
 
 #### 3.2 Universal Performance (Generalization)
 
 *How well does the model perform on the complete dataset (Real + All Synthetic)? This is the true test of robustness.*
 
-| Model Train Source      | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix | Conclusion |
-| :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | :--------------- | :--- |
-| **Real + Syn V3** | **0.981** | **0.940** | **0.967** | **0.897** | ![CM](docs/confusion_matrix_real_syn_v3_universal.png) | **Best Generalization.** Maintains high Recall (0.940) on universal set, minimizing False Negatives. |
-| Real + Syn V2           | 0.994           | 0.976           | 0.994           | 0.793           | ![CM](docs/confusion_matrix_real_syn_v2_universal.png) | **Less Precise Boxes.** High classification scores but significantly lower mAP@50-95 (0.793) than V3. |
-| Real                    | 0.954           | 0.877           | 0.941           | 0.633           | ![CM](docs/confusion_matrix_real_universal.png) | **Data Limitation.** Real data alone struggles to cover variances, leading to lower Recall and mAP. |
-| Syn V3                  | 0.909           | 0.426           | 0.573           | 0.506           | ![CM](docs/confusion_matrix_syn_v3_universal.png) | **Domain Gap Failure.** Misses >50% of real-world guns (Recall 0.426), proving Syn-only is insufficient. |
-| Syn V2                  | 0.789           | 0.500           | 0.580           | 0.265           | ![CM](docs/confusion_matrix_syn_v2_universal.png) | **Poor Transfer.** Low Precision and Recall confirm noisy synthetic data fails to assist real-world detection. |
+| Model Train Source      | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix                                     | Conclusion                                                                                                           |
+| :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
+| **Real + Syn V3** | **0.981** | **0.940** | **0.967** | **0.897** | ![CM](docs/confusion_matrix_real_syn_v3_universal.png) | **Best Generalization.** Maintains high Recall (0.940) on universal set, minimizing False Negatives.           |
+| Real + Syn V2           | 0.994           | 0.976           | 0.994           | 0.793           | ![CM](docs/confusion_matrix_real_syn_v2_universal.png) | **Less Precise Boxes.** High classification scores but significantly lower mAP@50-95 (0.793) than V3.          |
+| Real                    | 0.954           | 0.877           | 0.941           | 0.633           | ![CM](docs/confusion_matrix_real_universal.png)        | **Data Limitation.** Real data alone struggles to cover variances, leading to lower Recall and mAP.            |
+| Syn V3                  | 0.909           | 0.426           | 0.573           | 0.506           | ![CM](docs/confusion_matrix_syn_v3_universal.png)      | **Domain Gap Failure.** Misses >50% of real-world guns (Recall 0.426), proving Syn-only is insufficient.       |
+| Syn V2                  | 0.789           | 0.500           | 0.580           | 0.265           | ![CM](docs/confusion_matrix_syn_v2_universal.png)      | **Poor Transfer.** Low Precision and Recall confirm noisy synthetic data fails to assist real-world detection. |
 
 #### 3.3 Key Observations
 
@@ -306,12 +306,12 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 #### Detection Examples — Day vs. Night per Model
 
-| Model | ☀️ Day | 🌙 Night |
-|---|---|---|
-| **Real Data** | ![day-real](docs/day_test1_output_real_data_3c9276e8.gif) | ![night-real](docs/night_test1_output_real_data_3c9276e8.gif) |
-| **Syn V2 Only** | ![day-synv2](docs/day_test1_output_synv2_487afaee.gif) | ![night-synv2](docs/night_test1_output_synv2_487afaee.gif) |
+| Model                   | ☀️ Day                                                   | 🌙 Night                                                       |
+| ----------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
+| **Real Data**     | ![day-real](docs/day_test1_output_real_data_3c9276e8.gif)    | ![night-real](docs/night_test1_output_real_data_3c9276e8.gif)    |
+| **Syn V2 Only**   | ![day-synv2](docs/day_test1_output_synv2_487afaee.gif)       | ![night-synv2](docs/night_test1_output_synv2_487afaee.gif)       |
 | **Syn V2 + Real** | ![day-synv2r](docs/day_test1_output_synv2+real_6e83b006.gif) | ![night-synv2r](docs/night_test1_output_synv2+real_6e83b006.gif) |
-| **Syn V3 Only** | ![day-synv3](docs/day_test1_output_synv3_704ef9d9.gif) | ![night-synv3](docs/night_test1_output_synv3_704ef9d9.gif) |
+| **Syn V3 Only**   | ![day-synv3](docs/day_test1_output_synv3_704ef9d9.gif)       | ![night-synv3](docs/night_test1_output_synv3_704ef9d9.gif)       |
 | **Syn V3 + Real** | ![day-synv3r](docs/day_test1_output_synv3+real_94a5fa9b.gif) | ![night-synv3r](docs/night_test1_output_synv3+real_94a5fa9b.gif) |
 
 **Observations:**
@@ -334,14 +334,14 @@ Combining real and synthetic data captures the best of both worlds: the volume a
 
 #### 5.3 Bonus — VSD v2 vs. VSD v3
 
-| Aspect | Syn V2 | Syn V3 |
-|---|---|---|
-| **Annotation Quality** | Noisy — many labels missing or misaligned (manually fixed) | Clean — two curated subsets (Dataset_0 + Dataset_1) |
-| **Visual Realism** | Lower — homogeneous backgrounds, artificial lighting | Higher — varied environments, more realistic physics |
-| **Domain Gap** | High → unstable detections on real footage | Lower → better feature transfer |
-| **Universal mAP@50-95** (combined w/ Real) | 0.793 | **0.897** |
-| **Night Robustness** | Poor — frequent misses | Moderate — holds up when paired with Real |
-| **Verdict** | ❌ Noisy data degrades the combined model | ✅ Clean synthetic data meaningfully improves generalisation |
+| Aspect                                           | Syn V2                                                      | Syn V3                                                       |
+| ------------------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| **Annotation Quality**                     | Noisy — many labels missing or misaligned (manually fixed) | Clean — two curated subsets (Dataset_0 + Dataset_1)         |
+| **Visual Realism**                         | Lower — homogeneous backgrounds, artificial lighting       | Higher — varied environments, more realistic physics        |
+| **Domain Gap**                             | High → unstable detections on real footage                 | Lower → better feature transfer                             |
+| **Universal mAP@50-95** (combined w/ Real) | 0.793                                                       | **0.897**                                              |
+| **Night Robustness**                       | Poor — frequent misses                                     | Moderate — holds up when paired with Real                   |
+| **Verdict**                                | ❌ Noisy data degrades the combined model                   | ✅ Clean synthetic data meaningfully improves generalisation |
 
 **Conclusion**: VSD v3 is clearly superior. The annotation quality and visual realism of Syn V3 directly translate into a +0.104 mAP@50-95 uplift over Syn V2 when combined with real data.
 
@@ -357,11 +357,11 @@ Combining real and synthetic data captures the best of both worlds: the volume a
 
 #### Day vs. Night Summary
 
-| Condition | Best Model | Recall | Notes |
-|---|---|---|---|
-| **Day** ☀️ | Syn V3 + Real | 0.940 | Tight boxes, stable tracking, low FP rate |
-| **Night** 🌙 | Real Data | ~0.877 | Most robust under low-light without synthetic interference |
-| **Both (generalised)** | Syn V3 + Real | **0.940** | Overall winner across all conditions |
+| Condition                    | Best Model    | Recall          | Notes                                                      |
+| ---------------------------- | ------------- | --------------- | ---------------------------------------------------------- |
+| **Day** ☀️           | Syn V3 + Real | 0.940           | Tight boxes, stable tracking, low FP rate                  |
+| **Night** 🌙           | Real Data     | ~0.877          | Most robust under low-light without synthetic interference |
+| **Both (generalised)** | Syn V3 + Real | **0.940** | Overall winner across all conditions                       |
 
 #### Environmental Challenges
 
@@ -392,11 +392,6 @@ Combining real and synthetic data captures the best of both worlds: the volume a
 ### Object Tracking
 
 YOLO's built-in **ByteTrack** tracker (`model.track(..., persist=True)`) is used to assign consistent IDs to detected firearms across frames. This prevents ID reassignment during brief occlusions and produces stable "Weapon ID: N" overlays in all output videos. ByteTrack is lightweight enough to run in real-time on GPU (RTX-class) without impacting inference FPS.
-
-### Robustness Test (2h Pre-Release Video)
-
-- **Scenario**: An unseen test video (`test2.mp4`) was provided 2 hours before the review deadline.
-- **Results**: The **Syn V3 + Real** model correctly detected the firearm in all clearly visible frames. Minor tracking drops were observed during fast camera pans. The model did not produce any false positives during the entire clip.
 
 ---
 
@@ -441,7 +436,6 @@ We propose leveraging advanced **3D Generative AI** to revolutionize synthetic d
 ├── README.md
 └── ...
 ```
-
 
 ---
 
