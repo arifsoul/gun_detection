@@ -1,17 +1,56 @@
 # Computer Vision Assessment: Black Gun Detection (KAC PDW)
 
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python Version">
+  <img src="https://img.shields.io/badge/Ultralytics-YOLO26n-FF3838?style=for-the-badge&logo=PyTorch&logoColor=white" alt="Ultralytics YOLO">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen?style=for-the-badge" alt="Project Status">
+</div>
+
+---
+
 ## 📌 Executive Summary & Project Overview
 
-**Objective**: To systematically prepare, train, and rigorously evaluate a custom computer vision model tailored for the precise detection of a **Black Gun (KAC PDW)**. This assessment provides an empirical comparison of object detection models trained on **Synthetic Data (SD)** against those trained on **Real-World Data**, alongside a strategically combined dataset to ascertain optimal performance methodologies.
+This project focuses on the systematic preparation, training, and rigorous evaluation of a custom computer vision model tailored for the precise detection of a **Black Gun (KAC PDW)**.
 
-**Project Duration**: 1 Week
-**Base Architectural Model**: YOLO26n
-**Key Deliverables**:
+### 🎯 Objectives
 
-- Rigorous Data Preparation, Curation, & Pipeline Isolation
-- Advanced Model Training Strategies (SD, Real, Combined Datasets)
-- Real-time Test Video Inference Interface
-- Comprehensive Analytical Reporting & Performance Insights
+- **Empirical Comparison**: Compare object detection models trained on **Synthetic Data (SD)** against those trained on **Real-World Data**.
+- **Optimization**: Strategic combination of datasets to ascertain optimal performance methodologies.
+
+### ⏱️ Project Details
+
+- **Project Duration**: 1 Week
+- **Base Architectural Model**: YOLO26n
+- **Key Deliverables**:
+  - 🛠️ Rigorous Data Preparation & Pipeline Isolation
+  - 🧠 Advanced Model Training Strategies (SD, Real, Combined)
+  - 🖥️ Real-time Test Video Inference Interface
+  - 📊 Comprehensive Analytical Reporting & Insights
+
+---
+
+## 📖 Table of Contents
+
+- [🚀 Deployment & Execution Guide](#-deployment--execution-guide)
+  - [1. Prerequisites](#1-prerequisites)
+  - [2. Installation](#2-installation)
+  - [3. Data Setup](#3-data-setup)
+  - [4. Training](#4-training)
+  - [5. Evaluation](#5-evaluation)
+  - [6. Inference — Desktop GUI](#6-inference--desktop-gui-inferencepy)
+- [📊 Comprehensive Reporting & Empirical Analysis](#-comprehensive-reporting--empirical-analysis)
+  - [1. Data Preparation & Isolation](#1-data-preparation--isolation)
+  - [2. Model Training Strategy](#2-model-training-strategy)
+  - [3. Detection Accuracy & Performance Metrics](#3-detection-accuracy--performance-metrics)
+  - [4. Qualitative Analysis & Visual Evaluation](#4-qualitative-analysis--visual-evaluation)
+  - [5. Comparative Analysis](#5-comparative-analysis-real-vs-synthetic-vs-combined)
+  - [6. Robustness & Environmental Analysis](#6-robustness--environmental-analysis)
+  - [7. Synthetic Data Viability Analysis](#7-synthetic-data-viability-analysis)
+- [🌟 Bonus Features](#-bonus-features)
+- [🔮 Future Improvements](#-future-improvements)
+- [📂 Project Structure](#project-structure)
+- [📚 Citations & Academic References](#-citations--academic-references)
 
 ---
 
@@ -19,54 +58,50 @@
 
 ### 1. Prerequisites
 
-- Python 3.8+
-- GPU with CUDA support (recommended)
-- Dependencies: `ultralytics`, `opencv-python`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `mlflow`, `jupyter` or `notebook`
+Ensure you have the following installed:
+
+- **Python 3.8+**
+- **GPU with CUDA support** (highly recommended for training)
+- **Key Dependencies**: `ultralytics`, `opencv-python`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `mlflow`, `jupyter`
 
 ### 2. Installation
 
 ```bash
+# Clone the repository
 git clone https://github.com/arifsoul/gun_detection.git
 cd gun_detection
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
 ### 3. Data Setup
 
-- Place the datasets in the `data/` directory (or specify structure).
-- Ensure `data.yaml` is configured correctly.
+- Place the datasets in the `data/` directory.
+- Ensure `data.yaml` is configured correctly for the training paths.
 
 ### 4. Training
 
-The comprehensive training pipeline is encapsulated within `training.ipynb`. This computational notebook orchestrates:
+The training pipeline is handled in `training.ipynb`.
 
-1. **Data Preparation**: Merging datasets, fixing labels, splitting into Train/Val/Test, and generating `data.yaml`.
-2. **Model Training**: Training yolo26n models (Real, Synthetic, Combined) with MLflow logging.
-3. **MLflow Integration**: Experiments are tracked in `mlruns/`.
+1. **Data Prep**: Merges datasets, fixes labels, generates splits.
+2. **Model Training**: Executes YOLO training for different variants.
+3. **MLflow**: All experiments are tracked automatically.
 
-To train a model:
-
-1. Open `training.ipynb`.
-2. Configure the `selected_dataset` variable in the "Training" cell (e.g., `real`, `syn_v3`, `combined`).
-3. Run all cells.
+> [!TIP]
+> Configure the `selected_dataset` variable in the "Training" cell (e.g., `real`, `syn_v3`, `combined`) before running all cells.
 
 ### 5. Evaluation
 
-Model evaluation is handled in `evaluation.ipynb`. This notebook:
+Use `evaluation.ipynb` for post-training analysis.
 
-1. Loads the best models from successful MLflow runs.
-2. Evaluates them on the isolated Test set.
-3. Generates metrics (mAP, Confusion Matrix).
-
-To evaluate:
-
-1. Open `evaluation.ipynb`.
-2. Run all cells.
-3. View the aggregated results table and plots within the notebook.
+- Loads best models from MLflow.
+- Evaluates on the isolated Test set.
+- Generates mAP and Confusion Matrix plots.
 
 ### 6. Inference — Desktop GUI (`inference.py`)
 
-The robust standalone inference system utilizes a **Tkinter-based desktop graphical user interface (GUI)** (`inference.py`), ensuring efficient local execution without dependency on browser environments.
+A robust **Tkinter-based GUI** for real-time video inference.
 
 #### GUI Environment Perspectives
 
@@ -79,101 +114,37 @@ The robust standalone inference system utilizes a **Tkinter-based desktop graphi
 #### 6.1 Launching the App
 
 ```bash
-# Activate virtual environment first
+# Activate your environment
 source .venv/bin/activate        # Linux / macOS
 .venv\Scripts\Activate.ps1       # Windows PowerShell
 
+# Run the inference app
 python inference.py
 ```
 
-The application window (`1400 × 900`) will open with a **scrollable sidebar** on the left and a **video preview area** on the right.
+#### 6.2 Sidebar Controls Reference
 
----
+| Section | Control | Description |
+| :--- | :--- | :--- |
+| **Model** | Listbox | Multi-select trained models from `mlruns/`. |
+| **Input Video** | Text + Browse | Select `.mp4 / .avi / .mov` video files. |
+| **Resolution** | Combobox | Working resolution (Original, 1080p, 720p, 480p). |
+| **Threshold** | Slider | Minimum confidence score (Default: **0.40**). |
+| **Simulation** | Slider | Adjust brightness. System auto-detects **Day/Night** exposure. |
+| **Output** | Checkbox + Radio | Save result as MP4 or GIF to `runs/inference/`. |
+| **Results** | Listbox + Buttons | Access, play, or delete saved inference results. |
+| **Actions** | Buttons | **Preview** (simulation), **Inference** (processing), **Pause**, **Stop**. |
 
-#### 6.2 Sidebar Controls
+#### 6.3 Typical Workflow
 
-| Section                          | Control                                  | Description                                                                                                                    |
-| -------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| **Model**                  | Listbox (multi-select)                   | Auto-discovers all trained models from `mlruns/`. Hold `Ctrl` to select multiple models for batch inference.               |
-| **Input Video**            | Text entry + Browse                      | Type or browse to any `.mp4 / .avi / .mov` video file.                                                                       |
-| **Confidence Threshold**   | Slider (0.0 – 1.0)                      | Minimum confidence score to display a detection box. Default:**0.40**.                                                   |
-| **Environment Simulation** | **Brightness** slider (0.1 – 2.0) | Simulates different lighting.`< 1.0` = darker, `> 1.0` = brighter.                                                         |
-|                                  | **Live Preview** checkbox          | Plays the video with current brightness applied**without running inference**. Useful for previewing simulation settings. |
-| **Output**                 | **Save Output Video** checkbox     | When checked, saves the annotated result to `runs/inference/`.                                                               |
-|                                  | **Format** radio (MP4 / GIF)       | Choose output container. MP4 uses `cv2.VideoWriter`; GIF uses PIL (frames buffered in memory).                               |
-| **Results**                | Listbox                                  | Lists all saved MP4 and GIF files sorted by date (newest first).                                                               |
-|                                  | **Play Selected** button           | Opens and plays the selected result file in the preview area.                                                                  |
-| **Buttons**                | **START INFERENCE**                | Begins inference on the selected video with all selected models sequentially.                                                  |
-|                                  | **STOP**                           | Immediately stops inference, preview, or playback.                                                                             |
-
----
-
-#### 6.3 Output File Naming
-
-Output files are automatically named using the following convention:
-
-```
-[video_filename]_output_[model_name].[mp4|gif]
-```
-
-**Example**: Running `day1.mp4` through the `real_data (3c9276e8)` model with GIF selected produces:
-
-```
-runs/inference/day1_output_real_data_3c9276e8.gif
-```
-
-Output folder: `runs/inference/`
-
----
-
-#### 6.4 Live Preview Mode
-
-1. Select a video file using **Browse**.
-2. Adjust the **Brightness** slider to the desired value.
-3. Check **Live Preview (before inference)**.
-4. The video plays in the preview area with brightness applied — no model loaded.
-5. The **Condition** metric bar shows live Day / Night classification.
-6. Uncheck or click **START INFERENCE** to exit preview mode.
-
----
-
-#### 6.5 Running Batch Inference (Multiple Models)
-
-1. In the **Model** listbox, hold `Ctrl` and click each model to select.
-2. Select your video and output format.
-3. Click **START INFERENCE**.
-4. The app processes each model sequentially, saving a separate output file per model.
-5. Progress is shown in the status bar: `Processing (1/3): model_name → MP4`.
-
----
-
-#### 6.6 Status Bar & Metrics
-
-| Indicator                          | Meaning                                                            |
-| ---------------------------------- | ------------------------------------------------------------------ |
-| 🟢`✅ SAFE` (green bar)          | No gun detected in current frame                                   |
-| 🔴`⚠️ GUN DETECTED!` (red bar) | Gun bounding box found in frame                                    |
-| `🔍 Preview Mode`                | Live preview is active                                             |
-| `Saving GIF: ...`                | GIF is being written to disk after loop ends                       |
-| `Stopped`                        | Inference / playback halted                                        |
-| **Condition** metric         | `Day` / `Night` based on average frame brightness vs threshold |
-| **Device** metric            | `GPU` (CUDA) or `CPU`                                          |
-| **Detections** metric        | Number of bounding boxes in current frame                          |
-
----
-
-#### 6.7 Typical Workflow
-
-```
-1. Launch:      python inference.py
-2. Model:       Select one or more models from the list
-3. Video:       Browse to your .mp4 test video
-4. Preview:     (Optional) Enable Live Preview, adjust Brightness
-5. Output:      Check "Save Output Video", choose MP4 or GIF
-6. Run:         Click START INFERENCE
-7. Monitor:     Watch detection status in the red/green bar
-8. Playback:    After done, select file from Results → Play Selected
-```
+1. Launch app with `python inference.py`.
+2. Select one or more models from the list (models are loaded from `mlruns/`).
+3. Browse for a test video and select a **Working Resolution**.
+4. (Optional) Adjust brightness and test using the **🔍 Preview** button.
+5. Check **Save Output Video** and choose desired format (MP4 or GIF).
+6. Click **🚀 Inference** to begin detection.
+7. System dynamically names files based on conditions (e.g., `_DAY_GUN_DETECTED_`).
+8. Review results via **Results Listbox** → **Play Selected**.
 
 ---
 
@@ -183,73 +154,32 @@ Output folder: `runs/inference/`
 
 #### 1.1 Datasets Overview
 
-We utilize three primary datasets for this project, categorized into Synthetic and Real-world data:
-
 - **VSD (Synthetic Data)**:
-  - **Synthetic Dataset v2**: `synthetic_dataset_KAC_PDW_Blackgun_v2` (Used with manually fixed annotations).
-  - **Synthetic Dataset v3**: `synthetic_dataset_KAC_PDW_Blackgun_v3` (Cleaner dataset, comprising `Dataset_0` and `Dataset_1`).
+  - **v2**: `synthetic_dataset_KAC_PDW_Blackgun_v2` (Manual fixes applied).
+  - **v3**: `synthetic_dataset_KAC_PDW_Blackgun_v3` (Dataset_0 & Dataset_1).
 - **Real Data**:
-  - **Real Dataset**: `real_dataset_KAC_PDW_Blackgun` (Captured from actual camera footage).
+  - `real_dataset_KAC_PDW_Blackgun` (Captured from actual camera footage).
 
 #### 1.2 Data Cleaning & Annotation
 
-To ensure high-quality training data, we performed rigorous data cleaning and annotation:
-
-1. **Manual Annotation & Validation**:
-
-   - We manually reviewed all images and annotations.
-   - **Synthetic v2**: Missing annotations were identified and added to a `labels_fix` directory.
-   - **Real Dataset**: Similarly, specific real-world images lacking annotations were corrected.
-
+1. **Manual Annotation**: Validated and added missing annotations for both Synthetic and Real datasets.
    ![Manual Labelling Synthetic v2](docs/manual_labelling_synthetic_datasets_v2.png)
-   *Figure 1: Manual labelling and validation process for Synthetic Dataset v2.*
-
-   ![Manual Labelling Real Data](docs/manual_labelling_real_datasets.png)
-   *Figure 2: Manual labelling process for Real Dataset.*
-2. **Removal of Invalid Data**:
-
-   - We systematically removed invalid labels and erroneous object selections to prevent model confusion.
-
+2. **Invalid Data Removal**: Systematically removed erroneous labels.
    ![Delete Invalid Labels](docs/delete_invalid_labels_object_setections.png)
-   *Figure 3: Deletion of invalid labels and object selections.*
 
-#### 1.3 Data Splitting Strategy
+#### 1.3 Data Splitting & Isolation
 
-We employed a **Stratified Random Split** strategy to ensure that the distribution of data across Train, Validation, and Test sets is representative of the overall dataset.
-
-- **Split Ratios**:
-
-  - **Train**: 70%
-  - **Validation**: 20%
-  - **Test**: 10%
-- **Reproducibility**: A fixed random seed (`SEED = 42`) was used in `src/prepare_data.py` to ensure the split is deterministic and reproducible.
-
-  ![Data Split Distribution](docs/data_split_distribution.png)
-  *Figure 4: Distribution of images across Train, Validation, and Test splits for each dataset.*
-
-#### 1.4 Dataset Inventory
-
-A detailed inventory of the datasets (before and after fixing labels) is visualized below. This comparison highlights the significant effort put into correcting missing or incorrect annotations.
-
-![Dataset Inventory Comparison](docs/dataset_inventory_comparison.png)
-*Figure 5: Inventory of matched image-label pairs, comparing original vs. fixed annotations.*
-
-#### 1.5 Strict Data Isolation
-
-- **Test Set Integrity**: The Test set (10% of each dataset source) is **strictly isolated**. It is never seen by the model during the training or validation phases.
-- **Ground Truth**: The isolated test sets serve as the independent Ground Truth for final model evaluation.
+- **Strategy**: Stratified Random Split (Seed: 42).
+- **Ratios**: Train (70%), Validation (20%), Test (10%).
+- **Isolation**: Test set is **strictly isolated** and used only for final evaluation.
 
 ### 2. Model Training Strategy
 
-We trained three variations of the model to compare performance:
+Comparison of three primary paradigms:
 
-1. **SD-Only**: Trained exclusively on Synthetic Data.
-2. **Real-Only**: Trained exclusively on Real World Data.
-3. **Combined**: Trained on both datasets.
-
-#### Training Metrics Analysis
-
-To ensure rigorous experiment tracking, reproducible parameters, and transparent metric logging, all experiments were centralized using **MLflow**.
+1. **SD-Only**: Synthetic Data exclusively.
+2. **Real-Only**: Real-World Data exclusively.
+3. **Combined**: Hybrid approach.
 
 ![MLflow Experiments Tracking Dashboard](docs/mlflow_experiments.png)
 *Figure 6: MLflow UI dashboard displaying the systematic tracking of experimental runs, loss metrics, and artifacts across various model configurations.*
@@ -304,8 +234,6 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 ### 4. Qualitative Analysis & Visual Evaluation
 
-#### Detection Examples — Day vs. Night per Model
-
 | Model                   | ☀️ Day                                                   | 🌙 Night                                                       |
 | ----------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
 | **Real Data**     | ![day-real](docs/day_test1_output_real_data_3c9276e8.gif)    | ![night-real](docs/night_test1_output_real_data_3c9276e8.gif)    |
@@ -314,76 +242,26 @@ The model performance was evaluated using `yolo26n` on two criteria:
 | **Syn V3 Only**   | ![day-synv3](docs/day_test1_output_synv3_704ef9d9.gif)       | ![night-synv3](docs/night_test1_output_synv3_704ef9d9.gif)       |
 | **Syn V3 + Real** | ![day-synv3r](docs/day_test1_output_synv3+real_94a5fa9b.gif) | ![night-synv3r](docs/night_test1_output_synv3+real_94a5fa9b.gif) |
 
-**Observations:**
-
-- **Day**: Real Data and Syn V3+Real produce tight, stable bounding boxes. Syn-Only models miss detections or show intermittent false negatives.
-- **Night**: Syn-Only variants fail almost entirely under low light. Real Data maintains solid recall because it was trained on actual low-light footage. Syn V3+Real degrades gracefully, still achieving partial detections.
-- **Common failure mode**: all models occasionally lose tracking ID when the subject moves rapidly or is partially occluded by a foreground object.
-
----
-
 ### 5. Comparative Analysis: Real vs. Synthetic vs. Combined
 
-#### 5.1 SD-Only vs. Real-Only
-
-Training exclusively on synthetic data introduces a **domain gap**: the model learns features of 3D-rendered objects (uniform textures, perfect lighting) that do not transfer to real camera footage. The Syn-Only models achieved near-perfect self-evaluation scores (mAP@50 ≈ 0.995) but collapsed on the universal test set (Recall ≈ 0.43–0.50). Real-Only training generalises far better (Recall 0.877 universal) but is limited by the smaller dataset size and narrower visual variability.
-
-#### 5.2 Combined vs. Single-Source
-
-Combining real and synthetic data captures the best of both worlds: the volume and variety of synthetic data help the model learn broader feature representations, while real data anchors the model to actual camera characteristics. The **Real + Syn V3** combination achieves the highest universal mAP@50-95 (0.897) and the highest universal Recall (0.940), making it the production-ready choice.
-
-#### 5.3 Bonus — VSD v2 vs. VSD v3
-
-| Aspect                                           | Syn V2                                                      | Syn V3                                                       |
-| ------------------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------------------ |
-| **Annotation Quality**                     | Noisy — many labels missing or misaligned (manually fixed) | Clean — two curated subsets (Dataset_0 + Dataset_1)         |
-| **Visual Realism**                         | Lower — homogeneous backgrounds, artificial lighting       | Higher — varied environments, more realistic physics        |
-| **Domain Gap**                             | High → unstable detections on real footage                 | Lower → better feature transfer                             |
-| **Universal mAP@50-95** (combined w/ Real) | 0.793                                                       | **0.897**                                              |
-| **Night Robustness**                       | Poor — frequent misses                                     | Moderate — holds up when paired with Real                   |
-| **Verdict**                                | ❌ Noisy data degrades the combined model                   | ✅ Clean synthetic data meaningfully improves generalisation |
-
-**Conclusion**: VSD v3 is clearly superior. The annotation quality and visual realism of Syn V3 directly translate into a +0.104 mAP@50-95 uplift over Syn V2 when combined with real data.
-
----
+- **SD-Only vs. Real-Only**: Synthetic data alone suffers from a significant domain gap, leading to high self-test scores but poor real-world generalization.
+- **Combined Approach**: Merging Real and Synthetic (V3) data results in the most robust model, capturing broad features from synthetic renders and specific sensor characteristics from real footage.
+- **VSD v2 vs. VSD v3**: Syn V3 is clearly superior, offering +0.104 mAP@50-95 uplift due to higher annotation quality and visual realism.
 
 ### 6. Robustness & Environmental Analysis
 
-#### Real Test Video — Overall Performance
-
-![real-test-video](docs/real_test_video_performance.gif)
-
-*End-to-end detection on the real-world test video. Bounding boxes and YOLO tracking IDs are overlaid in real-time.*
-
-#### Day vs. Night Summary
-
-| Condition                    | Best Model    | Recall          | Notes                                                      |
-| ---------------------------- | ------------- | --------------- | ---------------------------------------------------------- |
-| **Day** ☀️           | Syn V3 + Real | 0.940           | Tight boxes, stable tracking, low FP rate                  |
-| **Night** 🌙           | Real Data     | ~0.877          | Most robust under low-light without synthetic interference |
-| **Both (generalised)** | Syn V3 + Real | **0.940** | Overall winner across all conditions                       |
-
-#### Environmental Challenges
-
-- **Low Light / Night**: Syn-Only models lose detection almost entirely. Real or combined training is mandatory for night robustness.
-- **Motion Blur**: Fast lateral movement causes all models to lose tracking ID for 1–2 frames; bounding box reappears on the next frame.
-- **Partial Occlusion**: When the firearm is partially hidden (e.g., behind an arm), combined models still produce a partial bounding box, whereas Syn-Only models drop the detection entirely.
-- **Similar Objects**: No significant false positives were observed in these clips; the model learned KAC PDW-specific features well enough to avoid confusion with similar-shaped objects.
-
----
+- **Overall Performance**: The **Real + Syn V3** model is the overall winner across conditions.
+- **Challenges**:
+  - **Low Light**: Night performance relies heavily on Real-world training data.
+  - **Motion Blur**: Rapid movement can cause temporary tracking loss (1-2 frames).
+  - **Occlusion**: Combined models handle partial occlusions significantly better than Syn-Only models.
 
 ### 7. Synthetic Data Viability Analysis
 
-**Question**: *Can synthetic datasets be used effectively instead of real datasets?*
+**Conclusion**: Synthetic data is **not a replacement** but a powerful **complement**.
 
-**Answer**: **No — synthetic data alone is insufficient, but it is a powerful complement to real data.**
-
-**Analysis**:
-
-- **Quality of Synthetic Data (Syn V3)**: The Syn V3 dataset features realistic 3D renders with varied backgrounds, correct perspective, and diverse lighting. However, even high-quality renders cannot fully replicate camera sensor noise, motion blur, and real-world illumination dynamics.
-- **Domain Gap Evidence**: Syn-Only models drop from mAP@50 ≈ 0.995 (self-test) to 0.426–0.500 Recall on the universal test — a >50% collapse in effective detection rate. This confirms that synthetic features alone do not generalise to real cameras.
-- **When Synthetic Data Helps**: Combined with real data, Syn V3 boosts mAP@50-95 from 0.633 (Real-Only) to **0.897** — a 41.7% improvement. This demonstrates that synthetic data is most valuable as a **data augmentation and class-balance tool**, not as a standalone training source.
-- **Convincing Argument**: The industry playbook for vision models mirrors these findings — NVIDIA, Tesla, and Waymo all use synthetic rendering to scale training data, but always with a real-data foundation. Synthetic provides breadth; real provides depth. Our results support exactly this principle: the highest-performing model is the one that combines both, in the right quality (V3 > V2).
+- **Evidence**: Syn-Only models collapse on real-world test sets (>50% drop in Recall).
+- **Value**: When paired with real data, high-quality synthetic data (Syn V3) boosts mAP@50-95 by ~42%.
 
 ---
 
@@ -391,40 +269,50 @@ Combining real and synthetic data captures the best of both worlds: the volume a
 
 ### Object Tracking
 
-YOLO's built-in **ByteTrack** tracker (`model.track(..., persist=True)`) is used to assign consistent IDs to detected firearms across frames. This prevents ID reassignment during brief occlusions and produces stable "Weapon ID: N" overlays in all output videos. ByteTrack is lightweight enough to run in real-time on GPU (RTX-class) without impacting inference FPS.
+Utilizes YOLO's built-in **ByteTrack** (`model.track(..., persist=True)`) for consistent ID assignment across frames, ensuring weapon stability even during brief occlusions.
 
 ---
 
 ## 🔮 Future Improvements
 
-### Generative AI for Synthetic Data Creation
+To transition from a controlled pilot to a production-ready system, the following roadmap focuses on Bridging the Gap between Synthetic and Real-World environments.
 
-We propose leveraging advanced **3D Generative AI** to revolutionize synthetic dataset creation, overcoming the limitations of traditional 2D data augmentation.
+### 1. Generative AI for Rapid Prototyping
 
+Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without manual 3D modeling.
 ![Hunyuan 3D Generation](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_from_2d_image.gif)
-*Figure 10: Demonstration of generating a 3D model of a person holding a KAC PDW from a single 2D image using Hunyuan 3D.*
 
-**Value Proposition:**
+- **Tools**: Hunyuan 3D, Stable Diffusion (ControlNet), UE5.
+- **Value**: Generates infinite visual variations with automated perfect labeling.
 
-- **Realistic 3D Asset Creation**: Tools like **Hunyuan 3D** can convert single 2D reference images into high-fidelity 3D meshes with textures.
-- **Infinite Variations**: Once a 3D asset is created, we can generate infinite variations in looking angles, lighting conditions, and background environments.
-- **Cost-Effective Scaling**: Significantly reduces the need for manual 3D modeling or expensive real-world data collection.
+### 2. Real-World Data Diversification
 
-**Proposed Workflow & Tools:**
+The current dataset lacks human interaction variety. Future efforts should prioritize:
 
-1. **Hunyuan 3D** (or similar Image-to-3D AI): To generate the base 3D mesh and texture from reference images.
-2. **Blender / Unreal Engine 5**: For rigging, animating, and placing the 3D assets into diverse high-quality scenes.
-3. **Python Scripting**: To automate the rendering of thousands of labeled images with perfect ground truth bounding boxes.
+- **Dynamic Poses**: Capturing weapon handling across various stances (low-ready, high-ready, firing, concealed carry draw).
+- **Background Complexity**: Moving from studio-like settings to high-clutter environments (malls, parking lots, dense forests).
+- **Subject Diversity**: Including diverse ethnic backgrounds, clothing types (tactical gear vs. civilian attire), and body types to prevent subject-dependency bias.
 
----
+### 3. Environmental & Hardware Robustness
 
-## 📂 Project Structure
+Real-world deployment faces non-ideal conditions that require specific data augmentations:
 
-```
-├── data/
-├── docs/
-├── mlruns/
-├── src/
+- **Atmospheric Conditions**: Simulating fog, rain, and heavy glare (lens flare) using specialized GANs or traditional computer vision filters.
+- **Hardware Variation**: Training with low-resolution, noisy CCTV-style footage (e.g., 360p/480p) to match typical security camera outputs.
+- **Motion Artifacts**: Purposeful inclusion of heavy motion blur data to handle rapid drawing or running scenarios.
+
+### 4. Advanced Domain Bridging (Sim-to-Real)
+
+Instead of just mixing datasets, we propose:
+
+- **Neural Style Transfer**: Applying the visual "style" of real-world CCTV cameras to sharp synthetic renders.
+- **Adversarial Training**: Using Domain Adversarial Neural Networks (DANN) to force the model to learn features that are invariant to the "source" (synthetic vs. real).
+
+```text
+├── data/           # Dataset storage
+├── docs/           # Documentation assets (images/gifs)
+├── mlruns/         # MLflow tracking logs
+├── src/            # Core source code
 │   ├── dataset.py
 │   ├── mlflow_utils.py
 │   ├── prepare_data.py
@@ -433,16 +321,15 @@ We propose leveraging advanced **3D Generative AI** to revolutionize synthetic d
 ├── training.ipynb
 ├── inference.py
 ├── requirements.txt
-├── README.md
-└── ...
+└── README.md
 ```
 
 ---
 
 ## 📚 Citations & Academic References
 
-1. **Jocher, G., Chaurasia, A., & Qiu, J. (2023).** *Ultralytics YOLO (Version 8.0.0)* [Computer software]. Available at: https://github.com/ultralytics/ultralytics
-2. **Zahavy, T., et al. (2023).** *Tracking with YOLO: ByteTrack Integration*. Documentation.
-3. **Chen, Y., et al. (2023).** *Hunyuan 3D: High-Fidelity 3D Generative Model*. Tencent AI Lab.
-4. **Zaharia, M., et al. (2018).** *Accelerating the Machine Learning Lifecycle with MLflow*. IEEE Data Eng. Bull.
-5. **Bradski, G. (2000).** *The OpenCV Library*. Dr. Dobb's Journal of Software Tools.
+1. **Jocher, G., et al. (2023)**. *Ultralytics YOLO (v8.0.0)*.
+2. **Zahavy, T., et al. (2023)**. *ByteTrack Integration*.
+3. **Chen, Y., et al. (2023)**. *Hunyuan 3D: Generative Model*.
+4. **Zaharia, M., et al. (2018)**. *MLflow Lifecycle Management*.
+5. **Bradski, G. (2000)**. *OpenCV Library*.
