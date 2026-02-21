@@ -32,25 +32,25 @@ This project focuses on the systematic preparation, training, and rigorous evalu
 
 ## 📖 Table of Contents
 
-- [🚀 Deployment & Execution Guide](#-deployment--execution-guide)
+- [🚀 Deployment &amp; Execution Guide](#-deployment--execution-guide)
   - [1. Prerequisites](#1-prerequisites)
   - [2. Installation](#2-installation)
   - [3. Data Setup](#3-data-setup)
   - [4. Training](#4-training)
   - [5. Evaluation](#5-evaluation)
   - [6. Inference — Desktop GUI](#6-inference--desktop-gui-inferencepy)
-- [📊 Comprehensive Reporting & Empirical Analysis](#-comprehensive-reporting--empirical-analysis)
-  - [1. Data Preparation & Isolation](#1-data-preparation--isolation)
+- [📊 Comprehensive Reporting &amp; Empirical Analysis](#-comprehensive-reporting--empirical-analysis)
+  - [1. Data Preparation &amp; Isolation](#1-data-preparation--isolation)
   - [2. Model Training Strategy](#2-model-training-strategy)
-  - [3. Detection Accuracy & Performance Metrics](#3-detection-accuracy--performance-metrics)
-  - [4. Qualitative Analysis & Visual Evaluation](#4-qualitative-analysis--visual-evaluation)
+  - [3. Detection Accuracy &amp; Performance Metrics](#3-detection-accuracy--performance-metrics)
+  - [4. Qualitative Analysis &amp; Visual Evaluation](#4-qualitative-analysis--visual-evaluation)
   - [5. Comparative Analysis](#5-comparative-analysis-real-vs-synthetic-vs-combined)
-  - [6. Robustness & Environmental Analysis](#6-robustness--environmental-analysis)
+  - [6. Robustness &amp; Environmental Analysis](#6-robustness--environmental-analysis)
   - [7. Synthetic Data Viability Analysis](#7-synthetic-data-viability-analysis)
 - [🌟 Bonus Features](#-bonus-features)
 - [🔮 Future Improvements](#-future-improvements)
 - [📂 Project Structure](#project-structure)
-- [📚 Citations & Academic References](#-citations--academic-references)
+- [📚 Citations &amp; Academic References](#-citations--academic-references)
 
 ---
 
@@ -124,16 +124,16 @@ python inference.py
 
 #### 6.2 Sidebar Controls Reference
 
-| Section | Control | Description |
-| :--- | :--- | :--- |
-| **Model** | Listbox | Multi-select trained models from `mlruns/`. |
-| **Input Video** | Text + Browse | Select `.mp4 / .avi / .mov` video files. |
-| **Resolution** | Combobox | Working resolution (Original, 1080p, 720p, 480p). |
-| **Threshold** | Slider | Minimum confidence score (Default: **0.40**). |
-| **Simulation** | Slider | Adjust brightness. System auto-detects **Day/Night** exposure. |
-| **Output** | Checkbox + Radio | Save result as MP4 or GIF to `runs/inference/`. |
-| **Results** | Listbox + Buttons | Access, play, or delete saved inference results. |
-| **Actions** | Buttons | **Preview** (simulation), **Inference** (processing), **Pause**, **Stop**. |
+| Section               | Control           | Description                                                                                        |
+| :-------------------- | :---------------- | :------------------------------------------------------------------------------------------------- |
+| **Model**       | Listbox           | Multi-select trained models from `mlruns/`.                                                      |
+| **Input Video** | Text + Browse     | Select `.mp4 / .avi / .mov` video files.                                                         |
+| **Resolution**  | Combobox          | Working resolution (Original, 1080p, 720p, 480p).                                                  |
+| **Threshold**   | Slider            | Minimum confidence score (Default:**0.40**).                                                 |
+| **Simulation**  | Slider            | Adjust brightness. System auto-detects**Day/Night** exposure.                                |
+| **Output**      | Checkbox + Radio  | Save result as MP4 or GIF to `runs/inference/`.                                                  |
+| **Results**     | Listbox + Buttons | Access, play, or delete saved inference results.                                                   |
+| **Actions**     | Buttons           | **Preview** (simulation), **Inference** (processing), **Pause**, **Stop**. |
 
 #### 6.3 Typical Workflow
 
@@ -179,12 +179,12 @@ Comparison of three primary paradigms:
 
 1. **SD-Only**: Synthetic Data exclusively.
 2. **Real-Only**: Real-World Data exclusively.
-3. **Combined**: Hybrid approach.
+3. **Combined**: Hybrid approach (synv2+real and synv3+real).
 
 ![MLflow Experiments Tracking Dashboard](docs/mlflow_experiments.png)
 *Figure 6: MLflow UI dashboard displaying the systematic tracking of experimental runs, loss metrics, and artifacts across various model configurations.*
 
-To deeply understand the training dynamics, convergence behavior, and optimization trajectories of each model variant, we analyzed the corresponding training loss, validation loss, and Mean Average Precision (mAP). The ensuing visualizations juxtapose the performance paradigms of the **Synthetic-Only**, **Real-Only**, and **Combined** models throughout their respective training lifecycles.
+To deeply understand the training dynamics, convergence behavior, and optimization trajectories of each model variant, we analyzed the corresponding training loss, validation loss, and Mean Average Precision (mAP). The ensuing visualizations juxtapose the performance paradigms of the **Synthetic-Only**, **Real-Only**, **synv2+real and synv3+real** models throughout their respective training lifecycles.
 
 ![Training Loss Comparison](docs/result_comparation_training_loss.png)
 *Figure 7: Comparison of Training Box, Objectness, and Classification Loss. Lower values indicate better fitting to the training data.*
