@@ -167,11 +167,31 @@ python inference.py
 2. **Invalid Data Removal**: Systematically removed erroneous labels.
    ![Delete Invalid Labels](docs/delete_invalid_labels_object_setections.png)
 
-#### 1.3 Data Splitting & Isolation
+#### 1.3 Data Splitting Strategy
 
-- **Strategy**: Stratified Random Split (Seed: 42).
-- **Ratios**: Train (70%), Validation (20%), Test (10%).
-- **Isolation**: Test set is **strictly isolated** and used only for final evaluation.
+We employed a **Stratified Random Split** strategy to ensure that the distribution of data across Train, Validation, and Test sets is representative of the overall dataset.
+
+-**Split Ratios**:
+
+  -**Train**: 70%
+
+  -**Validation**: 20%
+
+  -**Test**: 10%
+
+-**Reproducibility**: A fixed random seed (`SEED = 42`) was used in `src/prepare_data.py` to ensure the split is deterministic and reproducible.
+
+  ![Data Split Distribution](docs/data_split_distribution.png)
+
+  *Figure 4: Distribution of images across Train, Validation, and Test splits for each dataset.*
+
+#### 1.4 Dataset Inventory
+
+A detailed inventory of the datasets (before and after fixing labels) is visualized below. This comparison highlights the significant effort put into correcting missing or incorrect annotations.
+
+![Dataset Inventory Comparison](docs/dataset_inventory_comparison.png)
+
+*Figure 5: Inventory of matched image-label pairs, comparing original vs. fixed annotations.*
 
 ### 2. Model Training Strategy
 
