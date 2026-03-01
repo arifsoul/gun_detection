@@ -363,23 +363,30 @@ To transition from a controlled pilot to a production-ready system, we propose t
 
 ##### A. GenAI-Driven Synthetic Scaling (Hunyuan 3D + Blender)
 
-Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without manual 3D modeling.
+Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without manual 3D modeling, coupled with an automated Blender delivery system.
 
 - **Scaling via Hunyuan 3D**: Convert 2D images into high-fidelity 3D meshes for rapid dataset expansion.
-
-  The **Hunyuan 3D-3.1** model enables a revolutionary shift from static 2D references to fully articulable 3D assets. By utilizing high-fidelity Image-to-3D generation, we can reconstruct complex geometric structures of the KAC PDW and its operator directly from single-view photographs. This process eliminates the bottleneck of manual 3D modeling, allowing for the rapid creation of varied digital twins that can be rendered from any perspective, ensuring the model learns the underlying volumetric form rather than just 2D textures.
-
-  ![Source 2D Image](docs/kacpdw_person_2d_image.jpg)
-  *Figure: Raw 2D source image providing the visual reference for 3D reconstruction.*
+  The **Hunyuan 3D-1.0** model enables a revolutionary shift from static 2D references to fully articulable 3D assets. By utilizing high-fidelity Image-to-3D generation, we can reconstruct complex geometric structures of the KAC PDW directly from single-view photographs.
 
   ![Mesh Reconstruction (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_from_2d_image.gif)
   *Figure: Initial geometric mesh displaying the reconstructed spatial topology and volumetric detail.*
 
   ![Textured 3D Model (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_textured_from_2d_image.gif)
   *Figure: The final textured 3D digital twin, optimized for procedural environments and lighting variations.*
-- **Automated Blender Pipeline**: Integration into a headless Blender environment for perfect ground-truth annotation.
+- **Automated Blender Pipeline**: Integration into a headless Blender environment for perfect ground-truth annotation and extreme data augmentation.
 
-  To bridge the 'Sim-to-Real' gap, we integrate these 3D assets into a **Headless Blender Automation** pipeline. Using custom Python scripts, the system procedurally generates thousands of unique training frames by varying camera angles, lighting intensities, and background environments. Crucially, the pipeline calculates absolute screen-space coordinates for the weapon, generating **zero-pixel-error YOLO annotations** automatically. This ensures 100% ground-truth accuracy, which is virtually impossible to achieve with manual labeling in high-clutter scenes.
+  > [!IMPORTANT]
+  > **Critical Prerequisites (Blender Setup)**
+  > The Python script requires a specific object name to track. If your `.glb` model combines character and weapon into a single mesh, you must separate them first:
+  >
+  > 1. Select your model and press **Tab** to enter **Edit Mode**.
+  > 2. Hover over the weapon part and press **L** to select the entire linked mesh.
+  > 3. Press **P** and select **Selection** to isolate the weapon.
+  > 4. Press **Tab** to return to **Object Mode**.
+  > 5. Rename the isolated weapon object in the Outliner to **"kacpdw"**.
+  >
+
+  To bridge the 'Sim-to-Real' gap, we use python script that procedurally generates thousands of training frames by automating on blender:
 
   ![Asset Selection](docs/3d_model_gun_selection.png)
   *Figure: Strategic selection of high-fidelity 3D assets within the production environment.*
@@ -390,11 +397,17 @@ Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without
   ![Annotation 3D Asset](docs/3s_model_yolo_automatic_annotation_python_script_blender.png)
   *Figure: Python-driven automation interface for real-time bounding box calculation and YOLO-compliant annotation.*
 
+  1. **Raycast-based Bounding Box:** Calculates YOLO coordinates by evaluating only the visible vertices (not occluded), ensuring zero-pixel-error labels even in complex scenes.
+  2. **Multi-Lighting Augmentation:**
+     - **Daylight:** Normal high-energy white lighting.
+     - **Low Light:** Deep shadow simulation with blue atmospheric tints.
+     - **Infrared (Night Vision):** High-saturation neon green simulation for tactical detection.
+     - **Flickering/Strobe:** Random lighting failures to train model robustness against sensor glitches.
+
   ![Synthetic Dataset Preview (GIF)](docs/3d_model_dataset_custom_3d_kacpdw.gif)
   *Figure: A sequence of procedurally generated training frames showcasing diverse environmental conditions.*
-
-  ![YOLO Annotation Result](docs/3d_model_dataset_custom_3d_kacpdw.png)
-  *Figure: Final synthetic output featuring a perfectly aligned, machine-generated bounding box.*
+  ![Synthetic Dataset Preview (PNG)](docs/3d_model_dataset_custom_3d_kacpdw.png)
+  *Figure: Dataset result of custom 3D KAC PDW.*
 
 ##### B. Advanced Domain Bridging (Neural Adaptation)
 
