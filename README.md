@@ -77,8 +77,9 @@ graph TD
 - [Phase 4: Impact (Qualitative &amp; Environmental Robustness)](#phase-4-impact-qualitative-analysis--visual-evaluation)
 
 ### 💡 Part III: Critical Synthesis & Future Roadmap
-- [Phase 5: Synthesis & Future Optimization Roadmap](#phase-5-synthesis--future-optimization-roadmap)
-- [📚 Citations & Academic References](#-citations--academic-references)
+
+- [Phase 5: Synthesis &amp; Future Optimization Roadmap](#phase-5-synthesis--future-optimization-roadmap)
+- [📚 Citations &amp; Academic References](#-citations--academic-references)
 
 ---
 
@@ -354,6 +355,7 @@ While the model achieves high metrics on the test set, "Out-of-Distribution" (OO
 > **The Problem**: High mAP in controlled settings often masks a "Sim-to-Real" gap where the model learns to detect "synthetic interpretations" rather than the underlying object features.
 
 **Root Cause Identification:**
+
 1. **Sensor Signature Mismatch**: Synthetic data lacks the ISO noise, grain, and color artifacts inherent to real CCTV sensors.
 2. **Motion Discrepancies**: Real videos contain **Object Motion Blur** caused by shutter speeds, which is rarely captured in static synthetic renders.
 3. **Background Overfitting**: High-contrast, clean synthetic backgrounds lead to "feature bias," causing models to fail in cluttered real-world scenes.
@@ -366,40 +368,56 @@ While the model achieves high metrics on the test set, "Out-of-Distribution" (OO
 To transition from a controlled pilot to a production-ready system, we propose the following unified optimization strategy.
 
 ##### A. GenAI-Driven Synthetic Scaling (Hunyuan 3D + Blender)
+
 Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without manual 3D modeling.
 
 - **Scaling via Hunyuan 3D**: Convert 2D images into high-fidelity 3D meshes for rapid dataset expansion.
+
+  The **Hunyuan 3D-3.1** model enables a revolutionary shift from static 2D references to fully articulable 3D assets. By utilizing high-fidelity Image-to-3D generation, we can reconstruct complex geometric structures of the KAC PDW and its operator directly from single-view photographs. This process eliminates the bottleneck of manual 3D modeling, allowing for the rapid creation of varied digital twins that can be rendered from any perspective, ensuring the model learns the underlying volumetric form rather than just 2D textures.
+
   ![Source 2D Image](docs/kacpdw_person_2d_image.jpg)
-  *Figure: Source 2D image used as input for the 3D generation pipeline.*
-  
+  *Figure: Raw 2D source image providing the visual reference for 3D reconstruction.*
+
   ![Mesh Reconstruction (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_from_2d_image.gif)
-  *Figure: Geometric mesh reconstruction.*
+  *Figure: Initial geometric mesh displaying the reconstructed spatial topology and volumetric detail.*
 
   ![Textured 3D Model (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_textured_from_2d_image.gif)
-  *Figure: Fully textured 3D model for procedural rendering.*
-
+  *Figure: The final textured 3D digital twin, optimized for procedural environments and lighting variations.*
 - **Automated Blender Pipeline**: Integration into a headless Blender environment for perfect ground-truth annotation.
-  ![Asset Selection](docs/3d_model_gun_selection.png) | ![Isolated 3D Asset](docs/3d_model_gun_selected.png)
-  *Figure: PBR Material quality and asset preparation.*
 
-  ![Synthetic Dataset Preview (GIF)](docs/3d_model_dataset_custom_3d_kacpdw.gif) | ![YOLO Annotation Result](docs/3d_model_dataset_custom_3d_kacpdw.png)
-  *Figure: Automated rendering process with zero-pixel-error bounding box generation.*
+  To bridge the 'Sim-to-Real' gap, we integrate these 3D assets into a **Headless Blender Automation** pipeline. Using custom Python scripts, the system procedurally generates thousands of unique training frames by varying camera angles, lighting intensities, and background environments. Crucially, the pipeline calculates absolute screen-space coordinates for the weapon, generating **zero-pixel-error YOLO annotations** automatically. This ensures 100% ground-truth accuracy, which is virtually impossible to achieve with manual labeling in high-clutter scenes.
+
+  ![Asset Selection](docs/3d_model_gun_selection.png)
+  *Figure: Strategic selection of high-fidelity 3D assets within the production environment.*
+
+  ![Isolated 3D Asset](docs/3d_model_gun_selected.png)
+  *Figure: Isolated KAC PDW asset prepared with PBR materials for realistic light interaction.*
+
+  ![Annotation 3D Asset](docs/3s_model_yolo_automatic_annotation_python_script_blender.png)
+  *Figure: Python-driven automation interface for real-time bounding box calculation and YOLO-compliant annotation.*
+
+  ![Synthetic Dataset Preview (GIF)](docs/3d_model_dataset_custom_3d_kacpdw.gif)
+  *Figure: A sequence of procedurally generated training frames showcasing diverse environmental conditions.*
+
+  ![YOLO Annotation Result](docs/3d_model_dataset_custom_3d_kacpdw.png)
+  *Figure: Final synthetic output featuring a perfectly aligned, machine-generated bounding box.*
 
 ##### B. Advanced Domain Bridging (Neural Adaptation)
+
 Closing the visual gap between simulation and reality:
+
 - **Multi-Physics Augmentation**: Using **Albumentations** to simulate lens flare, ISO grain, and temporal motion blur.
 - **Domain Randomization (DR)**: Procedurally vary textures and lighting to force the model to focus on geometric KAC PDW structure over visual "textures."
 - **Adversarial Training (DANN/CycleGAN)**: Force the YOLO backbone to learn domain-invariant features (extracting the "gun" regardless of source).
 - **Neural Style Transfer**: Applying the visual "style" of real CCTV cameras to sharp synthetic renders.
 
 ##### C. Data Diversification & Hierarchical Fine-Tuning
+
 Improving real-world robustness:
+
 - **Dynamic Postures & Clutter**: Capture weapon handling in diverse stances and high-clutter environments (malls, forests).
 - **Global Diversity**: Include diverse ethnic groups and clothing types to mitigate subject bias.
 - **Hardware Agnosticism**: Train with low-resolution CCTV-style footage (360p/480p) and atmospheric conditions (fog/rain).
-- **Two-Stage Training**: 
-  1. **Pre-training**: Large-scale 1M+ frame synthetic training (Frozen Backbone).
-  2. **Calibration**: Fine-tuning on diverse real-world video (Unfrozen Heads) to align with real sensor signatures.
 
 ---
 
