@@ -30,7 +30,7 @@ This project focuses on the systematic preparation, training, and rigorous evalu
 
 ---
 
-## ⚡ Quick Results Dashboard (Executive Summary)
+## Quick Results Dashboard (Executive Summary)
 
 > [!IMPORTANT]
 > **Key Finding**: Synthetic data is a powerful **multiplier**, not a replacement.
@@ -41,7 +41,7 @@ This project focuses on the systematic preparation, training, and rigorous evalu
 
 ---
 
-## 🛠️ Technical Workflow & Architecture
+## Technical Workflow & Architecture
 
 A high-level overview of the systematic pipeline from data acquisition to real-time inference.
 
@@ -58,7 +58,51 @@ graph TD
     I --> J[Actionable Insights]
   
     style F fill:#f9f,stroke:#333,stroke-width:2px
-    style H fill:#bbf,stroke:#333,stroke-width:2px
+    style H fill:#f5b,stroke:#333,stroke-width:2px
+```
+
+---
+
+## Project Workspace Architecture
+
+```text
+├── data/           # Dataset storage
+├── docs/           # Documentation assets (images/gifs)
+├── mlruns/         # MLflow tracking logs
+├── src/            # Core source code
+│   ├── dataset.py
+│   ├── mlflow_utils.py
+│   ├── prepare_data.py
+│   └── utils.py
+├── evaluation.ipynb
+├── training.ipynb
+├── inference.py
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+---
+
+## Prerequisites
+
+Ensure you have the following installed:
+
+- **Python 3.8+**
+- **GPU with CUDA support** (highly recommended for training)
+- **Key Dependencies**: `ultralytics`, `opencv-python`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `mlflow`, `jupyter`
+
+---
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/arifsoul/gun_detection.git
+cd gun_detection
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 ---
@@ -69,12 +113,11 @@ graph TD
 
 - [Phase 1: Foundation (Data Engineering)](#phase-1-foundation-data-engineering--pipeline-isolation)
 - [Phase 2: Execution (Training &amp; Multi-Paradigm Strategy)](#phase-2-execution-empirical-training--multi-paradigm-strategy)
-- [🚀 Deployment &amp; Execution Guide](#-deployment--execution-guide)
 
 ### 📊 Part II: Empirical Analysis & Validation
 
 - [Phase 3: Validation (Accuracy &amp; Detailed Metrics)](#phase-3-validation-detection-accuracy--performance-metrics)
-- [Phase 4: Impact (Qualitative &amp; Environmental Robustness)](#phase-4-impact-qualitative-analysis--visual-evaluation)
+- [Phase 4: Impact (Qualitative Analysis &amp; Deployment Guide)](#phase-4-impact-qualitative-analysis--visual-evaluation)
 
 ### 💡 Part III: Critical Synthesis & Future Roadmap
 
@@ -85,7 +128,7 @@ graph TD
 
 ## 🏗️Part I: Foundation & Implementation
 
-### Phase 1: Foundation (Data Engineering & Pipeline Isolation)
+#### Phase 1: Foundation (Data Engineering & Pipeline Isolation)
 
 > Success in YOLO training starts with data purity. We isolated synthetic vs. real datasets to test cross-domain generalization.
 
@@ -108,15 +151,13 @@ graph TD
 
 We employed a **Stratified Random Split** strategy to ensure that the distribution of data across Train, Validation, and Test sets is representative of the overall dataset.
 
+The data preparation and splitting workflow are automated through `src/prepare_data.py`. This script implements the stratification by processing each data source (Real, Synthetic V2, and Synthetic V3) independently before aggregation. This approach guarantees that each training paradigm maintains a proportional representation of all visual domains across the splits. For every model configuration, the script dynamically generates YOLO-compliant manifest files (`.txt`) and dataset configuration files (`.yaml`), referencing absolute paths to ensure compatibility across different execution environments. By utilizing a fixed random seed (`SEED=42`), the entire pipeline remains fully deterministic, enabling consistent experimentation and benchmark reproducibility.
+
 -**Split Ratios**:
 
-  -**Train**: 70%
-
-  -**Validation**: 20%
-
-  -**Test**: 10%
-
--**Reproducibility**: A fixed random seed (`SEED = 42`) was used in `src/prepare_data.py` to ensure the split is deterministic and reproducible.
+- **Train**: 70%
+- **Validation**: 20%
+- **Test**: 10%
 
   ![Data Split Distribution](docs/data_split_distribution.png)
 
@@ -134,23 +175,16 @@ A detailed inventory of the datasets (before and after fixing labels) is visuali
 
 ### Phase 2: Execution (Empirical Training & Multi-Paradigm Strategy)
 
-#### Workspace
+#### Multi-Paradigm Training Strategy
 
-```text
-├── data/           # Dataset storage
-├── docs/           # Documentation assets (images/gifs)
-├── mlruns/         # MLflow tracking logs
-├── src/            # Core source code
-│   ├── dataset.py
-│   ├── mlflow_utils.py
-│   ├── prepare_data.py
-│   └── utils.py
-├── evaluation.ipynb
-├── training.ipynb
-├── inference.py
-├── requirements.txt
-└── README.md
-```
+The training pipeline is handled in `training.ipynb`.
+
+1. **Data Prep**: Merges datasets, fixes labels, generates splits.
+2. **Model Training**: Executes YOLO training for different variants.
+3. **MLflow**: All experiments are tracked automatically.
+
+> [!TIP]
+> Configure the `selected_dataset` variable in the "Training" cell (e.g., `real`, `syn_v3`, `combined`) before running all cells.
 
 Comparison of three primary paradigms:
 
@@ -172,104 +206,6 @@ To deeply understand the training dynamics, convergence behavior, and optimizati
 ![mAP Metrics Comparison](docs/result_comparation_training_metrics_mAP.png)
 *Figure 9: Comparison of Mean Average Precision (mAP) metrics. Higher mAP@50 and mAP@50-95 indicate superior detection accuracy.*
 
-## 🚀 Deployment & Execution Guide
-
-### 1. Prerequisites
-
-Ensure you have the following installed:
-
-- **Python 3.8+**
-- **GPU with CUDA support** (highly recommended for training)
-- **Key Dependencies**: `ultralytics`, `opencv-python`, `pandas`, `numpy`, `matplotlib`, `seaborn`, `mlflow`, `jupyter`
-
-### 2. Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/arifsoul/gun_detection.git
-cd gun_detection
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### 3. Data Setup
-
-- Place the datasets in the `data/` directory.
-- Ensure `data.yaml` is configured correctly for the training paths.
-
-### 4. Training
-
-The training pipeline is handled in `training.ipynb`.
-
-1. **Data Prep**: Merges datasets, fixes labels, generates splits.
-2. **Model Training**: Executes YOLO training for different variants.
-3. **MLflow**: All experiments are tracked automatically.
-
-> [!TIP]
-> Configure the `selected_dataset` variable in the "Training" cell (e.g., `real`, `syn_v3`, `combined`) before running all cells.
-
-### 5. Evaluation
-
-Use `evaluation.ipynb` for post-training analysis.
-
-- Loads best models from MLflow.
-- Evaluates on the isolated Test set.
-- Generates mAP and Confusion Matrix plots.
-
-### 6. Inference — Desktop GUI (`inference.py`)
-
-A robust **Tkinter-based GUI** for real-time video inference.
-
-#### GUI Environment Perspectives
-
-![Inference GUI - Day Condition](docs/inference_day.png)
-*Figure: Desktop interface demonstrating end-to-end inference under simulated daylight conditions.*
-
-![Inference GUI - Night Condition](docs/inference_night.png)
-*Figure: Desktop interface showcasing inference capabilities under simulated low-light (night) conditions.*
-![Inference GUI - GIF](docs/real_test_video_performance.gif)
-*Figure: Real-world test video performance.*
-
-#### Object Tracking
-
-Utilizes YOLO's built-in **ByteTrack** (`model.track(..., persist=True)`) for consistent ID assignment across frames, ensuring weapon stability even during brief occlusions.
-
-#### 6.1 Launching the App
-
-```bash
-# Activate your environment
-source .venv/bin/activate        # Linux / macOS
-.venv\Scripts\Activate.ps1       # Windows PowerShell
-
-# Run the inference app
-python inference.py
-```
-
-#### 6.2 Sidebar Controls Reference
-
-| Section               | Control           | Description                                                                                        |
-| :-------------------- | :---------------- | :------------------------------------------------------------------------------------------------- |
-| **Model**       | Listbox           | Multi-select trained models from `mlruns/`.                                                      |
-| **Input Video** | Text + Browse     | Select `.mp4 / .avi / .mov` video files.                                                         |
-| **Resolution**  | Combobox          | Working resolution (Original, 1080p, 720p, 480p).                                                  |
-| **Threshold**   | Slider            | Minimum confidence score (Default:**0.40**).                                                 |
-| **Simulation**  | Slider            | Adjust brightness. System auto-detects**Day/Night** exposure.                                |
-| **Output**      | Checkbox + Radio  | Save result as MP4 or GIF to `runs/inference/`.                                                  |
-| **Results**     | Listbox + Buttons | Access, play, or delete saved inference results.                                                   |
-| **Actions**     | Buttons           | **Preview** (simulation), **Inference** (processing), **Pause**, **Stop**. |
-
-#### 6.3 Typical Workflow
-
-1. Launch app with `python inference.py`.
-2. Select one or more models from the list (models are loaded from `mlruns/`).
-3. Browse for a test video and select a **Working Resolution**.
-4. (Optional) Adjust brightness and test using the **🔍 Preview** button.
-5. Check **Save Output Video** and choose desired format (MP4 or GIF).
-6. Click **🚀 Inference** to begin detection.
-7. System dynamically names files based on conditions (e.g., `_DAY_GUN_DETECTED_`).
-8. Review results via **Results Listbox** → **Play Selected**.
-
 ---
 
 ## 📊 Part II: Empirical Analysis & Validation
@@ -282,6 +218,12 @@ The model performance was evaluated using `yolo26n` on two criteria:
 2. **Universal Performance**: Evaluating all models on the **Combined Test Set** (acting as a Universal Ground Truth) to measure generalization.
 
 #### 3.1 Domain-Specific Performance (Self-Evaluation)
+
+Use `evaluation.ipynb` for post-training analysis.
+
+- Loads best models from MLflow.
+- Evaluates on the isolated Test set.
+- Generates mAP and Confusion Matrix plots.
 
 > All models perform exceptionally well on their *own* data (mAP ~0.995). This proves the training architecture is sound, but self-evaluation alone is insufficient for real-world reliability.
 
@@ -316,6 +258,58 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 ### Phase 4: Impact (Qualitative Analysis & Visual Evaluation)
 
+#### 4.1 Inference — Desktop GUI (`inference.py`)
+
+A robust **Tkinter-based GUI** for real-time video inference.
+
+![Inference GUI - Day Condition](docs/inference_day.png)
+*Figure: Desktop interface demonstrating end-to-end inference under simulated daylight conditions.*
+
+![Inference GUI - Night Condition](docs/inference_night.png)
+*Figure: Desktop interface showcasing inference capabilities under simulated low-light (night) conditions.*
+![Inference GUI - GIF](docs/real_test_video_performance.gif)
+*Figure: Real-world test video performance.*
+
+**Object Tracking**
+Utilizes YOLO's built-in **ByteTrack** (`model.track(..., persist=True)`) for consistent ID assignment across frames, ensuring weapon stability even during brief occlusions.
+
+**Launching the App**
+
+```bash
+# Activate your environment
+source .venv/bin/activate        # Linux / macOS
+.venv\Scripts\Activate.ps1       # Windows PowerShell
+
+# Run the inference app
+python inference.py
+```
+
+**Sidebar Controls Reference**
+
+| Section               | Control           | Description                                                                                        |
+| :-------------------- | :---------------- | :------------------------------------------------------------------------------------------------- |
+| **Model**       | Listbox           | Multi-select trained models from `mlruns/`.                                                      |
+| **Input Video** | Text + Browse     | Select `.mp4 / .avi / .mov` video files.                                                         |
+| **Resolution**  | Combobox          | Working resolution (Original, 1080p, 720p, 480p).                                                  |
+| **Threshold**   | Slider            | Minimum confidence score (Default:**0.40**).                                                 |
+| **Simulation**  | Slider            | Adjust brightness. System auto-detects**Day/Night** exposure.                                |
+| **Output**      | Checkbox + Radio  | Save result as MP4 or GIF to `runs/inference/`.                                                  |
+| **Results**     | Listbox + Buttons | Access, play, or delete saved inference results.                                                   |
+| **Actions**     | Buttons           | **Preview** (simulation), **Inference** (processing), **Pause**, **Stop**. |
+
+**Typical Workflow**
+
+1. Launch app with `python inference.py`.
+2. Select one or more models from the list (models are loaded from `mlruns/`).
+3. Browse for a test video and select a **Working Resolution**.
+4. (Optional) Adjust brightness and test using the **🔍 Preview** button.
+5. Check **Save Output Video** and choose desired format (MP4 or GIF).
+6. Click **🚀 Inference** to begin detection.
+7. System dynamically names files based on conditions (e.g., `_DAY_GUN_DETECTED_`).
+8. Review results via **Results Listbox** → **Play Selected**.
+
+#### 4.2 Qualitative Visual Evaluation
+
 | Model                   | ☀️ Day                                                   | 🌙 Night                                                       |
 | ----------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
 | **Real Data**     | ![day-real](docs/day_test1_output_real_data_3c9276e8.gif)    | ![night-real](docs/night_test1_output_real_data_3c9276e8.gif)    |
@@ -324,7 +318,7 @@ The model performance was evaluated using `yolo26n` on two criteria:
 | **Syn V3 Only**   | ![day-synv3](docs/day_test1_output_synv3_704ef9d9.gif)       | ![night-synv3](docs/night_test1_output_synv3_704ef9d9.gif)       |
 | **Syn V3 + Real** | ![day-synv3r](docs/day_test1_output_synv3+real_94a5fa9b.gif) | ![night-synv3r](docs/night_test1_output_synv3+real_94a5fa9b.gif) |
 
-#### 4.1 Environmental Robustness Highlights
+#### 4.3 Environmental Robustness Highlights
 
 - **Low-Light Resilience**: Performance in night conditions heavily relies on the "Real-World" subset of the training data.
 - **Motion Stability**: Combined models handle partial occlusions (behind hands/clothing) significantly better than synthetic-only models.
