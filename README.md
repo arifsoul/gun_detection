@@ -15,44 +15,161 @@ This project focuses on the systematic preparation, training, and rigorous evalu
 
 ### 🎯 Objectives
 
-- **Empirical Comparison**: Compare object detection models trained on **Synthetic Data (SD)** against those trained on **Real-World Data**.
-- **Optimization**: Strategic combination of datasets to ascertain optimal performance methodologies.
+- **Empirical Contrast**: Benchmark **Synthetic Data (SD)** against **Real-World Data** to quantify the "Sim-to-Real" performance gap.
+- **Strategic Optimization**: Identify the optimal data-mix (Real + Synthetic) for maximizing model robustness and precision.
 
 ### ⏱️ Project Details
 
-- **Project Duration**: 1 Week
-- **Base Architectural Model**: YOLO26n
-- **Key Deliverables**:
-  - 🛠️ Rigorous Data Preparation & Pipeline Isolation
-  - 🧠 Advanced Model Training Strategies (SD, Real, Combined)
-  - 🖥️ Real-time Test Video Inference Interface
-  - 📊 Comprehensive Analytical Reporting & Insights
+- **Timeline**: 1-Week Sprint.
+- **Architecture**: YOLO26n (Ultralytics).
+- **Core Deliverables**:
+  - 🛠️ Isolated Data Pipelines (Synthetic vs. Real).
+  - 🧠 Multi-Paradigm Training (SD-Only, Real-Only, Combined).
+  - 🖥️ Real-time GUI for Video Inference.
+  - 📊 Data-Driven Comparative Analysis & Insights.
 
 ---
 
-## 📖 Table of Contents
+## ⚡ Quick Results Dashboard (Executive Summary)
 
+> [!IMPORTANT]
+> **Key Finding**: Synthetic data is a powerful **multiplier**, not a replacement.
+>
+> - **Top Performer**: `Real + Syn V3` model (mAP@50-95: **0.897**).
+> - **Efficiency Boost**: Synthetic V3 improved high-precision detection by **~42%** when paired with real-world data.
+> - **Robustness**: Successfully handles lighting transitions (Day/Night) and motion blur.
+
+---
+
+## 🛠️ Technical Workflow & Architecture
+
+A high-level overview of the systematic pipeline from data acquisition to real-time inference.
+
+```mermaid
+graph TD
+    A[Data Acquisition] --> B[Data Cleaning & Isolation]
+    B --> C{Training Strategy}
+    C -->|SD-Only| D[Synthetic Model]
+    C -->|Real-Only| E[Real Model]
+    C -->|Hybrid| F[Combined Model]
+    D & E & F --> G[Domain-Specific Evaluation]
+    G --> H[Universal Performance Testing]
+    H --> I[Real-time GUI Inference]
+    I --> J[Actionable Insights]
+  
+    style F fill:#f9f,stroke:#333,stroke-width:2px
+    style H fill:#bbf,stroke:#333,stroke-width:2px
+```
+
+---
+
+## 📖 Presentation Roadmap (Table of Contents)
+
+### 🏗️ Part I: Foundation & Implementation
+
+- [Phase 1: Foundation (Data Engineering)](#phase-1-foundation-data-engineering--pipeline-isolation)
+- [Phase 2: Execution (Training &amp; Multi-Paradigm Strategy)](#phase-2-execution-empirical-training--multi-paradigm-strategy)
 - [🚀 Deployment &amp; Execution Guide](#-deployment--execution-guide)
-  - [1. Prerequisites](#1-prerequisites)
-  - [2. Installation](#2-installation)
-  - [3. Data Setup](#3-data-setup)
-  - [4. Training](#4-training)
-  - [5. Evaluation](#5-evaluation)
-  - [6. Inference — Desktop GUI](#6-inference--desktop-gui-inferencepy)
-- [📊 Comprehensive Reporting &amp; Empirical Analysis](#-comprehensive-reporting--empirical-analysis)
-  - [1. Data Preparation &amp; Isolation](#1-data-preparation--isolation)
-  - [2. Model Training Strategy](#2-model-training-strategy)
-  - [3. Detection Accuracy &amp; Performance Metrics](#3-detection-accuracy--performance-metrics)
-  - [4. Qualitative Analysis &amp; Visual Evaluation](#4-qualitative-analysis--visual-evaluation)
-  - [5. Comparative Analysis](#5-comparative-analysis-real-vs-synthetic-vs-combined)
-  - [6. Robustness &amp; Environmental Analysis](#6-robustness--environmental-analysis)
-  - [7. Synthetic Data Viability Analysis](#7-synthetic-data-viability-analysis)
-- [🌟 Bonus Features](#-bonus-features)
-- [🔮 Future Improvements](#-future-improvements)
-- [📂 Project Structure](#project-structure)
-- [📚 Citations &amp; Academic References](#-citations--academic-references)
+
+### 📊 Part II: Empirical Analysis & Validation
+
+- [Phase 3: Validation (Accuracy &amp; Detailed Metrics)](#phase-3-validation-detection-accuracy--performance-metrics)
+- [Phase 4: Impact (Qualitative &amp; Environmental Robustness)](#phase-4-impact-qualitative-analysis--visual-evaluation)
+
+### 💡 Part III: Critical Synthesis & Future Roadmap
+- [Phase 5: Synthesis & Future Optimization Roadmap](#phase-5-synthesis--future-optimization-roadmap)
+- [📚 Citations & Academic References](#-citations--academic-references)
 
 ---
+
+## 🏗️Part I: Foundation & Implementation
+
+### Phase 1: Foundation (Data Engineering & Pipeline Isolation)
+
+> Success in YOLO training starts with data purity. We isolated synthetic vs. real datasets to test cross-domain generalization.
+
+#### 1.1 Datasets Overview
+
+- **VSD (Synthetic Data)**:
+  - **v2**: `synthetic_dataset_KAC_PDW_Blackgun_v2` (Manual fixes applied).
+  - **v3**: `synthetic_dataset_KAC_PDW_Blackgun_v3` (Dataset_0 & Dataset_1).
+- **Real Data**:
+  - `real_dataset_KAC_PDW_Blackgun` (Captured from actual camera footage).
+
+#### 1.2 Data Cleaning & Annotation
+
+1. **Manual Annotation**: Validated and added missing annotations for both Synthetic and Real datasets.
+   ![Manual Labelling Synthetic v2](docs/manual_labelling_synthetic_datasets_v2.png)
+2. **Invalid Data Removal**: Systematically removed erroneous labels.
+   ![Delete Invalid Labels](docs/delete_invalid_labels_object_setections.png)
+
+#### 1.3 Data Splitting Strategy
+
+We employed a **Stratified Random Split** strategy to ensure that the distribution of data across Train, Validation, and Test sets is representative of the overall dataset.
+
+-**Split Ratios**:
+
+  -**Train**: 70%
+
+  -**Validation**: 20%
+
+  -**Test**: 10%
+
+-**Reproducibility**: A fixed random seed (`SEED = 42`) was used in `src/prepare_data.py` to ensure the split is deterministic and reproducible.
+
+  ![Data Split Distribution](docs/data_split_distribution.png)
+
+  *Figure 4: Distribution of images across Train, Validation, and Test splits for each dataset.*
+
+#### 1.4 Dataset Inventory
+
+A detailed inventory of the datasets (before and after fixing labels) is visualized below. This comparison highlights the significant effort put into correcting missing or incorrect annotations.
+
+![Dataset Inventory Comparison](docs/dataset_inventory_comparison.png)
+
+*Figure 5: Inventory of matched image-label pairs, comparing original vs. fixed annotations.*
+
+---
+
+### Phase 2: Execution (Empirical Training & Multi-Paradigm Strategy)
+
+#### Workspace
+
+```text
+├── data/           # Dataset storage
+├── docs/           # Documentation assets (images/gifs)
+├── mlruns/         # MLflow tracking logs
+├── src/            # Core source code
+│   ├── dataset.py
+│   ├── mlflow_utils.py
+│   ├── prepare_data.py
+│   └── utils.py
+├── evaluation.ipynb
+├── training.ipynb
+├── inference.py
+├── requirements.txt
+└── README.md
+```
+
+Comparison of three primary paradigms:
+
+1. **SD-Only**: Synthetic Data exclusively.
+2. **Real-Only**: Real-World Data exclusively.
+3. **Combined**: Hybrid approach (synv2+real and synv3+real).
+
+![MLflow Experiments Tracking Dashboard](docs/mlflow_experiments.png)
+*Figure 6: MLflow UI dashboard displaying the systematic tracking of experimental runs, loss metrics, and artifacts across various model configurations.*
+
+To deeply understand the training dynamics, convergence behavior, and optimization trajectories of each model variant, we analyzed the corresponding training loss, validation loss, and Mean Average Precision (mAP). The ensuing visualizations juxtapose the performance paradigms of the **Synthetic-Only**, **Real-Only**, **synv2+real and synv3+real** models throughout their respective training lifecycles.
+
+![Training Loss Comparison](docs/result_comparation_training_loss.png)
+*Figure 7: Comparison of Training Box, Objectness, and Classification Loss. Lower values indicate better fitting to the training data.*
+
+![Validation Loss Comparison](docs/result_comparation_training_val_loss.png)
+*Figure 8: Comparison of Validation Loss. Consistently lower validation loss suggests better generalization and less overfitting.*
+
+![mAP Metrics Comparison](docs/result_comparation_training_metrics_mAP.png)
+*Figure 9: Comparison of Mean Average Precision (mAP) metrics. Higher mAP@50 and mAP@50-95 indicate superior detection accuracy.*
 
 ## 🚀 Deployment & Execution Guide
 
@@ -110,6 +227,12 @@ A robust **Tkinter-based GUI** for real-time video inference.
 
 ![Inference GUI - Night Condition](docs/inference_night.png)
 *Figure: Desktop interface showcasing inference capabilities under simulated low-light (night) conditions.*
+![Inference GUI - GIF](docs/real_test_video_performance.gif)
+*Figure: Real-world test video performance.*
+
+#### Object Tracking
+
+Utilizes YOLO's built-in **ByteTrack** (`model.track(..., persist=True)`) for consistent ID assignment across frames, ensuring weapon stability even during brief occlusions.
 
 #### 6.1 Launching the App
 
@@ -148,74 +271,9 @@ python inference.py
 
 ---
 
-## 📊 Comprehensive Reporting & Empirical Analysis
+## 📊 Part II: Empirical Analysis & Validation
 
-### 1. Data Preparation & Isolation
-
-#### 1.1 Datasets Overview
-
-- **VSD (Synthetic Data)**:
-  - **v2**: `synthetic_dataset_KAC_PDW_Blackgun_v2` (Manual fixes applied).
-  - **v3**: `synthetic_dataset_KAC_PDW_Blackgun_v3` (Dataset_0 & Dataset_1).
-- **Real Data**:
-  - `real_dataset_KAC_PDW_Blackgun` (Captured from actual camera footage).
-
-#### 1.2 Data Cleaning & Annotation
-
-1. **Manual Annotation**: Validated and added missing annotations for both Synthetic and Real datasets.
-   ![Manual Labelling Synthetic v2](docs/manual_labelling_synthetic_datasets_v2.png)
-2. **Invalid Data Removal**: Systematically removed erroneous labels.
-   ![Delete Invalid Labels](docs/delete_invalid_labels_object_setections.png)
-
-#### 1.3 Data Splitting Strategy
-
-We employed a **Stratified Random Split** strategy to ensure that the distribution of data across Train, Validation, and Test sets is representative of the overall dataset.
-
--**Split Ratios**:
-
-  -**Train**: 70%
-
-  -**Validation**: 20%
-
-  -**Test**: 10%
-
--**Reproducibility**: A fixed random seed (`SEED = 42`) was used in `src/prepare_data.py` to ensure the split is deterministic and reproducible.
-
-  ![Data Split Distribution](docs/data_split_distribution.png)
-
-  *Figure 4: Distribution of images across Train, Validation, and Test splits for each dataset.*
-
-#### 1.4 Dataset Inventory
-
-A detailed inventory of the datasets (before and after fixing labels) is visualized below. This comparison highlights the significant effort put into correcting missing or incorrect annotations.
-
-![Dataset Inventory Comparison](docs/dataset_inventory_comparison.png)
-
-*Figure 5: Inventory of matched image-label pairs, comparing original vs. fixed annotations.*
-
-### 2. Model Training Strategy
-
-Comparison of three primary paradigms:
-
-1. **SD-Only**: Synthetic Data exclusively.
-2. **Real-Only**: Real-World Data exclusively.
-3. **Combined**: Hybrid approach (synv2+real and synv3+real).
-
-![MLflow Experiments Tracking Dashboard](docs/mlflow_experiments.png)
-*Figure 6: MLflow UI dashboard displaying the systematic tracking of experimental runs, loss metrics, and artifacts across various model configurations.*
-
-To deeply understand the training dynamics, convergence behavior, and optimization trajectories of each model variant, we analyzed the corresponding training loss, validation loss, and Mean Average Precision (mAP). The ensuing visualizations juxtapose the performance paradigms of the **Synthetic-Only**, **Real-Only**, **synv2+real and synv3+real** models throughout their respective training lifecycles.
-
-![Training Loss Comparison](docs/result_comparation_training_loss.png)
-*Figure 7: Comparison of Training Box, Objectness, and Classification Loss. Lower values indicate better fitting to the training data.*
-
-![Validation Loss Comparison](docs/result_comparation_training_val_loss.png)
-*Figure 8: Comparison of Validation Loss. Consistently lower validation loss suggests better generalization and less overfitting.*
-
-![mAP Metrics Comparison](docs/result_comparation_training_metrics_mAP.png)
-*Figure 9: Comparison of Mean Average Precision (mAP) metrics. Higher mAP@50 and mAP@50-95 indicate superior detection accuracy.*
-
-### 3. Detection Accuracy & Performance Metrics
+### Phase 3: Validation (Detection Accuracy & Performance Metrics)
 
 The model performance was evaluated using `yolo26n` on two criteria:
 
@@ -224,7 +282,7 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 #### 3.1 Domain-Specific Performance (Self-Evaluation)
 
-*How well does the model learn its training domain?*
+> All models perform exceptionally well on their *own* data (mAP ~0.995). This proves the training architecture is sound, but self-evaluation alone is insufficient for real-world reliability.
 
 | Model Train Source      | Test Set                | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix                                | Conclusion                                                                                                           |
 | :---------------------- | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | ----------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
@@ -236,7 +294,8 @@ The model performance was evaluated using `yolo26n` on two criteria:
 
 #### 3.2 Universal Performance (Generalization)
 
-*How well does the model perform on the complete dataset (Real + All Synthetic)? This is the true test of robustness.*
+> [!IMPORTANT]
+> **The "Pitch" Result**: Notice the massive Recall drop in `Syn V3` (0.426). This highlights the **Domain Gap**. However, `Real + Syn V3` maintains a Recall of **0.940**, proving that high-quality synthetic data *strengthens* real-world detection.
 
 | Model Train Source      | Precision (P)   | Recall (R)      | mAP@50          | mAP@50-95       | Confusion Matrix                                     | Conclusion                                                                                                           |
 | :---------------------- | :-------------- | :-------------- | :-------------- | :-------------- | :--------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
@@ -246,13 +305,15 @@ The model performance was evaluated using `yolo26n` on two criteria:
 | Syn V3                  | 0.909           | 0.426           | 0.573           | 0.506           | ![CM](docs/confusion_matrix_syn_v3_universal.png)      | **Domain Gap Failure.** Misses >50% of real-world guns (Recall 0.426), proving Syn-only is insufficient.       |
 | Syn V2                  | 0.789           | 0.500           | 0.580           | 0.265           | ![CM](docs/confusion_matrix_syn_v2_universal.png)      | **Poor Transfer.** Low Precision and Recall confirm noisy synthetic data fails to assist real-world detection. |
 
-#### 3.3 Key Observations
+#### 3.3 Key Empirical Observations
 
-1. **Best Generalization**: The **Real + Syn V3** model achieves the highest **mAP@50-95 (0.897)** on the universal test set, significantly outperforming other variants.
-2. **Importance of Real Data**: Models trained purely on synthetic data (Syn V2, Syn V3) struggle to generalize to the full dataset (Recall drops below 50% for Syn V3).
-3. **Data Quality Matters**: Synthetic V3 (when combined with Real data) contributes to a much stronger model than Synthetic V2, jumping from 0.793 to 0.897 in mAP@50-95.
+1. **Synthetic Superiority in Hybrid Training**: The `Real + Syn V3` model significantly outperforms the `Real-Only` baseline (0.897 vs 0.633 mAP@50-95), proving that high-quality synthetic data effectively supplements limited real-world datasets.
+2. **The Recall Trap**: Models trained *exclusively* on synthetic data (Syn V3) show high precision but a drastic **Recall drop (0.426)** on universal sets, highlighting the "Sim-to-Real" domain gap.
+3. **Quality vs. Quantity**: Transitioning from Syn V2 to Syn V3 yielded a **+0.104 mAP gain**, demonstrating that annotation precision and visual realism are more critical than raw image count.
 
-### 4. Qualitative Analysis & Visual Evaluation
+---
+
+### Phase 4: Impact (Qualitative Analysis & Visual Evaluation)
 
 | Model                   | ☀️ Day                                                   | 🌙 Night                                                       |
 | ----------------------- | ---------------------------------------------------------- | -------------------------------------------------------------- |
@@ -262,94 +323,92 @@ The model performance was evaluated using `yolo26n` on two criteria:
 | **Syn V3 Only**   | ![day-synv3](docs/day_test1_output_synv3_704ef9d9.gif)       | ![night-synv3](docs/night_test1_output_synv3_704ef9d9.gif)       |
 | **Syn V3 + Real** | ![day-synv3r](docs/day_test1_output_synv3+real_94a5fa9b.gif) | ![night-synv3r](docs/night_test1_output_synv3+real_94a5fa9b.gif) |
 
-### 5. Comparative Analysis: Real vs. Synthetic vs. Combined
+#### 4.1 Environmental Robustness Highlights
 
-- **SD-Only vs. Real-Only**: Synthetic data alone suffers from a significant domain gap, leading to high self-test scores but poor real-world generalization.
-- **Combined Approach**: Merging Real and Synthetic (V3) data results in the most robust model, capturing broad features from synthetic renders and specific sensor characteristics from real footage.
-- **VSD v2 vs. VSD v3**: Syn V3 is clearly superior, offering +0.104 mAP@50-95 uplift due to higher annotation quality and visual realism.
+- **Low-Light Resilience**: Performance in night conditions heavily relies on the "Real-World" subset of the training data.
+- **Motion Stability**: Combined models handle partial occlusions (behind hands/clothing) significantly better than synthetic-only models.
+- **Tracking Consistency**: Rapid weapon movements (high-velocity draws) cause 1-2 frame tracking flickers, which are mitigated by ByteTrack's persistence.
 
-### 6. Robustness & Environmental Analysis
+---
 
-- **Overall Performance**: The **Real + Syn V3** model is the overall winner across conditions.
-- **Challenges**:
-  - **Low Light**: Night performance relies heavily on Real-world training data.
-  - **Motion Blur**: Rapid movement can cause temporary tracking loss (1-2 frames).
-  - **Occlusion**: Combined models handle partial occlusions significantly better than Syn-Only models.
+## 💡 Part III: Critical Synthesis & Future Roadmap
 
-### 7. Synthetic Data Viability Analysis
+---
 
-**Conclusion**: Synthetic data is **not a replacement** but a powerful **complement**.
+### Phase 5: Synthesis & Future Optimization Roadmap
+
+#### 5.1 Critical Evaluation: Synthesis & Data Viability
+
+**Conclusion**: Synthetic data is **not a replacement** but a powerful **multiplicative complement**.
 
 - **Evidence**: Syn-Only models collapse on real-world test sets (>50% drop in Recall).
-- **Value**: When paired with real data, high-quality synthetic data (Syn V3) boosts mAP@50-95 by ~42%.
+- **Value**: When paired with real data, high-quality synthetic data (Syn V3) boosts mAP@50-95 by **~42%**.
 
 ---
 
-## 🌟 Bonus Features
+#### 5.2 📉 The Sim-to-Real Gap Analysis
 
-### Object Tracking
+While the model achieves high metrics on the test set, "Out-of-Distribution" (OOD) performance on new, unseen videos reveals significant generalization challenges.
 
-Utilizes YOLO's built-in **ByteTrack** (`model.track(..., persist=True)`) for consistent ID assignment across frames, ensuring weapon stability even during brief occlusions.
+> [!CAUTION]
+> **The Problem**: High mAP in controlled settings often masks a "Sim-to-Real" gap where the model learns to detect "synthetic interpretations" rather than the underlying object features.
+
+**Root Cause Identification:**
+1. **Sensor Signature Mismatch**: Synthetic data lacks the ISO noise, grain, and color artifacts inherent to real CCTV sensors.
+2. **Motion Discrepancies**: Real videos contain **Object Motion Blur** caused by shutter speeds, which is rarely captured in static synthetic renders.
+3. **Background Overfitting**: High-contrast, clean synthetic backgrounds lead to "feature bias," causing models to fail in cluttered real-world scenes.
+4. **Exposure Variability**: Synthetic models often simplify dynamic range, failing to account for real-world light blooming and deep shadow occlusions.
 
 ---
 
-## 🔮 Future Improvements
+#### 5.3 🚀 The Optimization Roadmap
 
-To transition from a controlled pilot to a production-ready system, the following roadmap focuses on Bridging the Gap between Synthetic and Real-World environments.
+To transition from a controlled pilot to a production-ready system, we propose the following unified optimization strategy.
 
-### 1. Generative AI for Rapid Prototyping
-
+##### A. GenAI-Driven Synthetic Scaling (Hunyuan 3D + Blender)
 Proposing **3D Generative AI** (Image-to-3D) to scale datasets instantly without manual 3D modeling.
-![Hunyuan 3D Generation](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_from_2d_image.gif)
 
-- **Tools**: Hunyuan 3D, Stable Diffusion (ControlNet), UE5.
-- **Value**: Generates infinite visual variations with automated perfect labeling.
+- **Scaling via Hunyuan 3D**: Convert 2D images into high-fidelity 3D meshes for rapid dataset expansion.
+  ![Source 2D Image](docs/kacpdw_person_2d_image.jpg)
+  *Figure: Source 2D image used as input for the 3D generation pipeline.*
+  
+  ![Mesh Reconstruction (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_from_2d_image.gif)
+  *Figure: Geometric mesh reconstruction.*
 
-### 2. Real-World Data Diversification
+  ![Textured 3D Model (GIF)](docs/3d_model_person_with_kacpdw_using_hunyuan_3d_textured_from_2d_image.gif)
+  *Figure: Fully textured 3D model for procedural rendering.*
 
-The current dataset lacks human interaction variety. Future efforts should prioritize:
+- **Automated Blender Pipeline**: Integration into a headless Blender environment for perfect ground-truth annotation.
+  ![Asset Selection](docs/3d_model_gun_selection.png) | ![Isolated 3D Asset](docs/3d_model_gun_selected.png)
+  *Figure: PBR Material quality and asset preparation.*
 
-- **Dynamic Poses**: Capturing weapon handling across various stances (low-ready, high-ready, firing, concealed carry draw).
-- **Background Complexity**: Moving from studio-like settings to high-clutter environments (malls, parking lots, dense forests).
-- **Subject Diversity**: Including diverse ethnic backgrounds, clothing types (tactical gear vs. civilian attire), and body types to prevent subject-dependency bias.
+  ![Synthetic Dataset Preview (GIF)](docs/3d_model_dataset_custom_3d_kacpdw.gif) | ![YOLO Annotation Result](docs/3d_model_dataset_custom_3d_kacpdw.png)
+  *Figure: Automated rendering process with zero-pixel-error bounding box generation.*
 
-### 3. Environmental & Hardware Robustness
+##### B. Advanced Domain Bridging (Neural Adaptation)
+Closing the visual gap between simulation and reality:
+- **Multi-Physics Augmentation**: Using **Albumentations** to simulate lens flare, ISO grain, and temporal motion blur.
+- **Domain Randomization (DR)**: Procedurally vary textures and lighting to force the model to focus on geometric KAC PDW structure over visual "textures."
+- **Adversarial Training (DANN/CycleGAN)**: Force the YOLO backbone to learn domain-invariant features (extracting the "gun" regardless of source).
+- **Neural Style Transfer**: Applying the visual "style" of real CCTV cameras to sharp synthetic renders.
 
-Real-world deployment faces non-ideal conditions that require specific data augmentations:
-
-- **Atmospheric Conditions**: Simulating fog, rain, and heavy glare (lens flare) using specialized GANs or traditional computer vision filters.
-- **Hardware Variation**: Training with low-resolution, noisy CCTV-style footage (e.g., 360p/480p) to match typical security camera outputs.
-- **Motion Artifacts**: Purposeful inclusion of heavy motion blur data to handle rapid drawing or running scenarios.
-
-### 4. Advanced Domain Bridging (Sim-to-Real)
-
-Instead of just mixing datasets, we propose:
-
-- **Neural Style Transfer**: Applying the visual "style" of real-world CCTV cameras to sharp synthetic renders.
-- **Adversarial Training**: Using Domain Adversarial Neural Networks (DANN) to force the model to learn features that are invariant to the "source" (synthetic vs. real).
-
-```text
-├── data/           # Dataset storage
-├── docs/           # Documentation assets (images/gifs)
-├── mlruns/         # MLflow tracking logs
-├── src/            # Core source code
-│   ├── dataset.py
-│   ├── mlflow_utils.py
-│   ├── prepare_data.py
-│   └── utils.py
-├── evaluation.ipynb
-├── training.ipynb
-├── inference.py
-├── requirements.txt
-└── README.md
-```
+##### C. Data Diversification & Hierarchical Fine-Tuning
+Improving real-world robustness:
+- **Dynamic Postures & Clutter**: Capture weapon handling in diverse stances and high-clutter environments (malls, forests).
+- **Global Diversity**: Include diverse ethnic groups and clothing types to mitigate subject bias.
+- **Hardware Agnosticism**: Train with low-resolution CCTV-style footage (360p/480p) and atmospheric conditions (fog/rain).
+- **Two-Stage Training**: 
+  1. **Pre-training**: Large-scale 1M+ frame synthetic training (Frozen Backbone).
+  2. **Calibration**: Fine-tuning on diverse real-world video (Unfrozen Heads) to align with real sensor signatures.
 
 ---
 
 ## 📚 Citations & Academic References
 
-1. **Jocher, G., et al. (2023)**. *Ultralytics YOLO (v8.0.0)*.
-2. **Zahavy, T., et al. (2023)**. *ByteTrack Integration*.
-3. **Chen, Y., et al. (2023)**. *Hunyuan 3D: Generative Model*.
-4. **Zaharia, M., et al. (2018)**. *MLflow Lifecycle Management*.
-5. **Bradski, G. (2000)**. *OpenCV Library*.
+1. **Ultralytics YOLOv8** (Object Detection) - Jocher, G., Chaurasia, A., & Qiu, J. [GitHub Repository](https://github.com/ultralytics/ultralytics)
+2. **ByteTrack** (Multi-Object Tracking) - Zhang, Y., et al. (2022). *Multi-Object Tracking by Associating Every Detection Box*. [arXiv:2110.06864](https://arxiv.org/abs/2110.06864)
+3. **Hunyuan3D-1.0** (Generative 3D) - Tencent Hunyuan. (2024). *A Unified Framework for Text-to-3D and Image-to-3D Generation*. [arXiv:2411.02293](https://arxiv.org/abs/2411.02293)
+4. **MLflow** (Experiment Tracking) - Zaharia, M., et al. (2018). *Accelerating the Machine Learning Lifecycle*. [mlflow.org](https://mlflow.org/)
+5. **OpenCV** (Pre-processing) - Bradski, G. (2000). *The OpenCV Library*. [opencv.org](https://opencv.org/)
+6. **Albumentations** (Augmentation) - Buslaev, A., et al. (2020). *Fast and Flexible Image Augmentations*. [arXiv:2009.14030](https://arxiv.org/abs/2009.14030)
+7. **CycleGAN** (Domain Adaptation) - Zhu, J., et al. (2017). *Unpaired Image-to-Image Translation using Cycle-Consistent Adversarial Networks*. [arXiv:1703.10593](https://arxiv.org/abs/1703.10593)
